@@ -4,36 +4,35 @@
 <head>
     <link rel="stylesheet" href="https://usetrmnl.com/css/latest/plugins.css">
     <script src="https://usetrmnl.com/js/latest/plugins.js"></script>
-
-    <style>
-        .movie_title {
-            height: 50px;
-        }
-
-        .movie_poster {
-            max-height: 150px;
-            object-fit: contain;
-        }
-
-        .movie_timeslot {
-            padding: 5px !important;
-            height: 100% !important;
-            border-radius: 10px !important;
-        }
-    </style>
 </head>
 
 <body class="environment trmnl">
     <div class="screen">
         <div class="view view--full">
+            <style>
+                .movie_title {
+                    height: 50px;
+                    word-break: break-word !important;
+                    /* Prevents line breaks inside words */
+                }
+
+                .movie_poster {
+                    max-height: 150px;
+                    object-fit: contain;
+                }
+
+                .movie_timeslot {
+                    padding: 5px !important;
+                    height: 100% !important;
+                    border-radius: 10px !important;
+                }
+            </style>
             <div class="layout">
                 <div class="columns gap--large">
                     <div class="column">
-                        <div>
-                            <span class="title clamp--2 movie_title">Everything Everywhere All at Once</span>
-                        </div>
-                            <img class="image-dither movie_poster"
-                                src="https://www.themoviedb.org/t/p/w600_and_h900_bestv2/kiros9XpKnh6bzC4sfZhtHaQ0Y7.jpg">
+                        <span class="title clamp--2 movie_title">Everything Everywhere All at Once</span>
+                        <img class="image-dither movie_poster"
+                            src="https://www.themoviedb.org/t/p/w600_and_h900_bestv2/kiros9XpKnh6bzC4sfZhtHaQ0Y7.jpg">
                         <div class="item">
                             <div class="meta">
                             </div>
@@ -94,7 +93,7 @@
                         </div>
                     </div>
                     <div class="column">
-                        <span class="title clamp--2 movie_title">Marcel the Shell with Shoes On</span>
+                        <span class="title clamp--2 movie_title">AVeryLongTitleWhereTheWordIsLongerThanTheLine</span>
                         <img class="image-dither movie_poster"
                             src="https://www.themoviedb.org/t/p/w600_and_h900_bestv2/jaYmP4Ct8YLnxWAW2oYkUjeXtzm.jpg">
                         <div class="item">
