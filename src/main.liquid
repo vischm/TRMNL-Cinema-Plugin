@@ -37,7 +37,7 @@
 
                 .movie_timeslot {
                     padding: 5px !important;
-                    height: 100% !important;
+                    height: 27px !important;
                     border-radius: 10px !important;
                 }
             </style>
@@ -57,11 +57,12 @@
                             <div class="meta"></div>
                             <div class="content">
                                 <span class="title title--small">{{cinema.name}}</span>
-                                <div class="flex gap--small" style="margin-top: 5px;">
-                                    {%for screening in cinema.screenings %}
-                                    <span class="label label--outline label--small movie_timeslot">{{screening.time}} 
-                                        {% for tag in screening.tags %} {{tag}} {% endfor %}
-                                    </span>
+                                <div class="flex gap--small" style="margin-top: 5px; flex-wrap: wrap;">
+                                    {% for screening in cinema.screenings %}
+                                        <span class="label label--outline label--small movie_timeslot">
+                                            {{ screening.time }} 
+                                            {% for tag in screening.tags %} {{ tag }} {% endfor %}
+                                        </span>
                                     {% endfor %}
                                 </div>
                             </div>

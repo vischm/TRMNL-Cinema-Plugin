@@ -15,7 +15,8 @@
                         {
                             "time": "19:00",
                             "tags": [
-                                "OV", "3D"
+                                "OV",
+                                "3D"
                             ]
                         },
                         {
@@ -44,6 +45,34 @@
                             "tags": [
                                 "OV"
                             ]
+                        },
+                        {
+                            "time": "16:00",
+                            "tags": []
+                        },
+                        {
+                            "time": "16:00",
+                            "tags": []
+                        },
+                        {
+                            "time": "20:00",
+                            "tags": [
+                                "OV"
+                            ]
+                        },
+                        {
+                            "time": "23:00",
+                            "tags": [
+                                "OV"
+                            ]
+                        },
+                        {
+                            "time": "16:00",
+                            "tags": []
+                        },
+                        {
+                            "time": "16:00",
+                            "tags": []
                         }
                     ]
                 }
@@ -95,11 +124,26 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "name": "CineStar",
+                    "screenings": [
+                        {
+                            "time": "16:00",
+                            "tags": []
+                        },
+                        {
+                            "time": "20:00",
+                            "tags": [
+                                "OV"
+                            ]
+                        }
+                    ]
                 }
             ]
         },
         {
-            "title": "Marcel the Shell with Shoes On",
+            "title": "ggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",
             "poster_url": "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/jaYmP4Ct8YLnxWAW2oYkUjeXtzm.jpg",
             "rating": 4.5,
             "cinemas": [
