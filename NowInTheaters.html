@@ -11,14 +11,20 @@
         <div class="view view--full">
             <style>
                 .movie_title {
-                    height: 50px;
+                    height: 52px;
                     word-break: break-word !important;
                     /* Prevents line breaks inside words */
                 }
 
                 .movie_poster {
-                    max-height: 150px;
+                    height: 150px;
                     object-fit: contain;
+                }
+
+                .movie_rating{
+                    padding: 10px !important;
+                    height: 100% !important;
+                    border-radius: 10px !important;
                 }
 
                 .movie_timeslot {
@@ -31,8 +37,12 @@
                 <div class="columns gap--large">
                     <div class="column">
                         <span class="title clamp--2 movie_title">Everything Everywhere All at Once</span>
-                        <img class="image-dither movie_poster"
+                        <div class="flex flex--row">
+                            <img class="image-dither movie_poster"
                             src="https://www.themoviedb.org/t/p/w600_and_h900_bestv2/kiros9XpKnh6bzC4sfZhtHaQ0Y7.jpg">
+                            <span class="label label--outline movie_rating">4.4 ★</span>
+                        </div>
+                       
                         <div class="item">
                             <div class="meta">
                             </div>
@@ -61,8 +71,11 @@
                         <div>
                             <span class="title clamp--2 movie_title">Her</span>
                         </div>
-                        <img class="image-dither movie_poster"
+                        <div class="flex flex--row">
+                            <img class="image-dither movie_poster"
                             src="https://www.themoviedb.org/t/p/w600_and_h900_bestv2/lEIaL12hSkqqe83kgADkbUqEnvk.jpg">
+                            <span class="label label--outline movie_rating">4.4 ★</span>
+                        </div>
                         <div class="item">
                             <div class="meta">
                             </div>
@@ -94,8 +107,11 @@
                     </div>
                     <div class="column">
                         <span class="title clamp--2 movie_title">AVeryLongTitleWhereTheWordIsLongerThanTheLine</span>
-                        <img class="image-dither movie_poster"
+                        <div class="flex flex--row">
+                            <img class="image-dither movie_poster"
                             src="https://www.themoviedb.org/t/p/w600_and_h900_bestv2/jaYmP4Ct8YLnxWAW2oYkUjeXtzm.jpg">
+                            <span class="label label--outline movie_rating">4.4 ★</span>
+                        </div>
                         <div class="item">
                             <div class="meta">
                             </div>
