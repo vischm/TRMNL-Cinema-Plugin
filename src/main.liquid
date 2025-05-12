@@ -44,7 +44,7 @@
 
             <div class="layout layout--top">
                 <div class="columns gap--large">
-                    {% for movie in movies %}
+                    {% for movie in movies limit:4 %}
                     <div class="column" data-list-limit="true" data-list-max-height="180" data-list-hidden-count="true">
                         <span class="title clamp--2 movie_title back">{{movie.title}}</span>
                         <div class="flex flex--row flex--top">
