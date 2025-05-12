@@ -19,18 +19,20 @@
                 }
 
                 .movie_poster {
-                    height: 150px;
+                    height: 130px;
                     object-fit: contain;
                     border-radius: 10px !important;
                 }
 
                 .movie_rating {
                     padding: 10px !important;
+                    padding-bottom: 8px !important;
                     height: 100% !important;
                     border-radius: 10px !important;
                     margin-left: -35px !important;
-                    margin-top: 120px !important;
+                    margin-top: 95px !important;
                     background-color: white;
+                    margin-bottom: -10px !important;
                 }
 
                 .movie_timeslot {
@@ -40,10 +42,10 @@
                 }
             </style>
 
-            <div class="layout">
+            <div class="layout layout--top">
                 <div class="columns gap--large">
                     {% for movie in movies %}
-                    <div class="column">
+                    <div class="column" data-list-limit="true" data-list-max-height="180" data-list-hidden-count="true">
                         <span class="title clamp--2 movie_title back">{{movie.title}}</span>
                         <div class="flex flex--row flex--top">
                             <img class="image-dither movie_poster"

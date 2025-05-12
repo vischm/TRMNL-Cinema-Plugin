@@ -153,6 +153,36 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "name": "CineStar",
+                    "screenings": [
+                        {
+                            "time": "16:00",
+                            "tags": []
+                        },
+                        {
+                            "time": "20:00",
+                            "tags": [
+                                "OV"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "CinePlex",
+                    "screenings": [
+                        {
+                            "time": "16:00",
+                            "tags": []
+                        },
+                        {
+                            "time": "20:00",
+                            "tags": [
+                                "OV"
+                            ]
+                        }
+                    ]
                 }
             ]
         }
