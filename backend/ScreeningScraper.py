@@ -83,19 +83,3 @@ def add_screenings_to_movie_data(movie_data, movie_title, cinema_name, screening
         existing["screenings"].extend(screenings)
     else:
         movie_data[movie_title].append({"cinema": cinema_name, "screenings": screenings})
-
-
-def save_to_file(data: dict, filename: str) -> None:
-    try:
-        with open(filename, 'w', encoding='utf-8') as f:
-            json.dump(data, f, ensure_ascii=False, indent=4)
-        print(f"Data written to {filename}")
-    except IOError as e:
-        print(f"Failed to write data: {e}")
-
-
-if __name__ == "__main__":
-    city = "leipzig"
-    data = scrape_screenings(city)
-    if data:
-        save_to_file(data, 'out/screenings.json')
