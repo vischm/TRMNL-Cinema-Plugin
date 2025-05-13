@@ -35,12 +35,11 @@ def scrape_screenings(city: str) -> dict:
         movie_sections = cinema.find_all('div', class_='screenings-by-theater')
 
         for movie_section in movie_sections:
-            title_tag = movie_section.find('div', class_='movie')
-            if not title_tag:
-                continue
+            title, tags = extract_title_and_tags(movie_section)
 
-            title = title_tag.get_text(strip=True)
-            screenings = [s.get_text(strip=True) for s in movie_section.find_all('span', class_='cinde-tag')]
+            screenings = []
+            for s in movie_section.find_all('span', class_='cinde-tag'):
+                screenings.append({'time': s.get_text(strip=True), 'tags': tags})
 
             if not title or not screenings:
                 continue
@@ -48,12 +47,39 @@ def scrape_screenings(city: str) -> dict:
             if title not in movie_data:
                 movie_data[title] = []
 
-            movie_data[title].append({
-                'cinema': cinema_name,
-                'screenings': screenings
-            })
+            # Append the cinema and screenings to the movie data
+            if not any(cinema['cinema'] == cinema_name for cinema in movie_data[title]):
+                movie_data[title].append({
+                    'cinema': cinema_name,
+                    'screenings': screenings
+                })
+            else:
+                # Find the existing cinema entry and append screenings
+                for cinema in movie_data[title]:
+                    if cinema['cinema'] == cinema_name:
+                        cinema['screenings'].extend(screenings)
+                        break
 
     return movie_data
+
+
+def extract_title_and_tags(movie_section):
+    title_with_tags = movie_section.find('div', class_='movie').get_text(strip=True)
+    if not title_with_tags:
+        return None, None
+    
+    possible_tags = ["3D", "(OmU)", "(OF)"]
+    title = title_with_tags
+    tags = []
+    for tag in possible_tags:
+        if tag in title_with_tags:
+            tag_without_parentheses = tag.replace('(', '').replace(')', '')
+            if tag_without_parentheses == "OF":
+                tag_without_parentheses = "OV" # More common abbreviation
+            tags.append(tag_without_parentheses)
+            title = title.replace(tag, '').strip()
+
+    return title, tags
 
 
 def save_to_file(data: dict, filename: str):

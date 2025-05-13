@@ -3,13 +3,19 @@
         {
             "cinema": "CineStar - Der Filmpalast",
             "screenings": [
-                "19:30"
+                {
+                    "time": "19:30",
+                    "tags": []
+                }
             ]
         },
         {
             "cinema": "Cineplex",
             "screenings": [
-                "17:00"
+                {
+                    "time": "17:00",
+                    "tags": []
+                }
             ]
         }
     ],
@@ -17,25 +23,37 @@
         {
             "cinema": "CineStar - Der Filmpalast",
             "screenings": [
-                "14:40"
+                {
+                    "time": "14:40",
+                    "tags": []
+                }
             ]
         },
         {
             "cinema": "Cineplex",
             "screenings": [
-                "14:45"
+                {
+                    "time": "14:45",
+                    "tags": []
+                }
             ]
         },
         {
             "cinema": "Passage Kinos",
             "screenings": [
-                "15:30"
+                {
+                    "time": "15:30",
+                    "tags": []
+                }
             ]
         },
         {
             "cinema": "Schauburg",
             "screenings": [
-                "16:45"
+                {
+                    "time": "16:45",
+                    "tags": []
+                }
             ]
         }
     ],
@@ -43,26 +61,47 @@
         {
             "cinema": "CineStar - Der Filmpalast",
             "screenings": [
-                "14:00",
-                "17:10",
-                "19:50"
+                {
+                    "time": "14:00",
+                    "tags": []
+                },
+                {
+                    "time": "17:10",
+                    "tags": []
+                },
+                {
+                    "time": "19:50",
+                    "tags": []
+                },
+                {
+                    "time": "14:40",
+                    "tags": [
+                        "3D"
+                    ]
+                },
+                {
+                    "time": "17:20",
+                    "tags": [
+                        "3D"
+                    ]
+                }
             ]
         },
         {
             "cinema": "Cineplex",
             "screenings": [
-                "14:30",
-                "17:00",
-                "20:00"
-            ]
-        }
-    ],
-    "Ein Minecraft Film 3D": [
-        {
-            "cinema": "CineStar - Der Filmpalast",
-            "screenings": [
-                "14:40",
-                "17:20"
+                {
+                    "time": "14:30",
+                    "tags": []
+                },
+                {
+                    "time": "17:00",
+                    "tags": []
+                },
+                {
+                    "time": "20:00",
+                    "tags": []
+                }
             ]
         }
     ],
@@ -70,15 +109,27 @@
         {
             "cinema": "CineStar - Der Filmpalast",
             "screenings": [
-                "17:05",
-                "20:00"
+                {
+                    "time": "17:05",
+                    "tags": []
+                },
+                {
+                    "time": "20:00",
+                    "tags": []
+                }
             ]
         },
         {
             "cinema": "Cineplex",
             "screenings": [
-                "17:15",
-                "20:00"
+                {
+                    "time": "17:15",
+                    "tags": []
+                },
+                {
+                    "time": "20:00",
+                    "tags": []
+                }
             ]
         }
     ],
@@ -86,13 +137,19 @@
         {
             "cinema": "CineStar - Der Filmpalast",
             "screenings": [
-                "14:00"
+                {
+                    "time": "14:00",
+                    "tags": []
+                }
             ]
         },
         {
             "cinema": "Cineplex",
             "screenings": [
-                "14:30"
+                {
+                    "time": "14:30",
+                    "tags": []
+                }
             ]
         }
     ],
@@ -100,7 +157,10 @@
         {
             "cinema": "CineStar - Der Filmpalast",
             "screenings": [
-                "14:25"
+                {
+                    "time": "14:25",
+                    "tags": []
+                }
             ]
         }
     ],
@@ -108,13 +168,19 @@
         {
             "cinema": "CineStar - Der Filmpalast",
             "screenings": [
-                "13:50"
+                {
+                    "time": "13:50",
+                    "tags": []
+                }
             ]
         },
         {
             "cinema": "Cineplex",
             "screenings": [
-                "17:00"
+                {
+                    "time": "17:00",
+                    "tags": []
+                }
             ]
         }
     ],
@@ -122,7 +188,10 @@
         {
             "cinema": "CineStar - Der Filmpalast",
             "screenings": [
-                "19:50"
+                {
+                    "time": "19:50",
+                    "tags": []
+                }
             ]
         }
     ],
@@ -130,14 +199,23 @@
         {
             "cinema": "CineStar - Der Filmpalast",
             "screenings": [
-                "16:40",
-                "19:40"
+                {
+                    "time": "16:40",
+                    "tags": []
+                },
+                {
+                    "time": "19:40",
+                    "tags": []
+                }
             ]
         },
         {
             "cinema": "Cineplex",
             "screenings": [
-                "19:45"
+                {
+                    "time": "19:45",
+                    "tags": []
+                }
             ]
         }
     ],
@@ -145,13 +223,19 @@
         {
             "cinema": "CineStar - Der Filmpalast",
             "screenings": [
-                "16:30"
+                {
+                    "time": "16:30",
+                    "tags": []
+                }
             ]
         },
         {
             "cinema": "Cineplex",
             "screenings": [
-                "20:15"
+                {
+                    "time": "20:15",
+                    "tags": []
+                }
             ]
         }
     ],
@@ -159,38 +243,49 @@
         {
             "cinema": "CineStar - Der Filmpalast",
             "screenings": [
-                "13:50",
-                "16:40",
-                "19:45"
+                {
+                    "time": "13:50",
+                    "tags": []
+                },
+                {
+                    "time": "16:40",
+                    "tags": []
+                },
+                {
+                    "time": "19:45",
+                    "tags": []
+                },
+                {
+                    "time": "19:15",
+                    "tags": [
+                        "OV"
+                    ]
+                },
+                {
+                    "time": "16:55",
+                    "tags": [
+                        "3D"
+                    ]
+                }
             ]
         },
         {
             "cinema": "Cineplex",
             "screenings": [
-                "14:30",
-                "17:00"
-            ]
-        }
-    ],
-    "Thunderbolts (OF)": [
-        {
-            "cinema": "CineStar - Der Filmpalast",
-            "screenings": [
-                "19:15"
-            ]
-        }
-    ],
-    "Thunderbolts 3D": [
-        {
-            "cinema": "CineStar - Der Filmpalast",
-            "screenings": [
-                "16:55"
-            ]
-        },
-        {
-            "cinema": "Cineplex",
-            "screenings": [
-                "19:45"
+                {
+                    "time": "14:30",
+                    "tags": []
+                },
+                {
+                    "time": "17:00",
+                    "tags": []
+                },
+                {
+                    "time": "19:45",
+                    "tags": [
+                        "3D"
+                    ]
+                }
             ]
         }
     ],
@@ -198,14 +293,23 @@
         {
             "cinema": "CineStar - Der Filmpalast",
             "screenings": [
-                "16:30",
-                "20:00"
+                {
+                    "time": "16:30",
+                    "tags": []
+                },
+                {
+                    "time": "20:00",
+                    "tags": []
+                }
             ]
         },
         {
             "cinema": "Cineplex",
             "screenings": [
-                "20:15"
+                {
+                    "time": "20:15",
+                    "tags": []
+                }
             ]
         }
     ],
@@ -213,13 +317,19 @@
         {
             "cinema": "CineStar - Der Filmpalast",
             "screenings": [
-                "14:15"
+                {
+                    "time": "14:15",
+                    "tags": []
+                }
             ]
         },
         {
             "cinema": "Cineplex",
             "screenings": [
-                "17:30"
+                {
+                    "time": "17:30",
+                    "tags": []
+                }
             ]
         }
     ],
@@ -227,7 +337,10 @@
         {
             "cinema": "Cineplex",
             "screenings": [
-                "14:45"
+                {
+                    "time": "14:45",
+                    "tags": []
+                }
             ]
         }
     ],
@@ -235,7 +348,10 @@
         {
             "cinema": "Cineplex",
             "screenings": [
-                "15:00"
+                {
+                    "time": "15:00",
+                    "tags": []
+                }
             ]
         }
     ],
@@ -243,7 +359,38 @@
         {
             "cinema": "Cineplex",
             "screenings": [
-                "16:45"
+                {
+                    "time": "16:45",
+                    "tags": []
+                }
+            ]
+        },
+        {
+            "cinema": "Passage Kinos",
+            "screenings": [
+                {
+                    "time": "14:15",
+                    "tags": [
+                        "OmU"
+                    ]
+                },
+                {
+                    "time": "20:30",
+                    "tags": [
+                        "OmU"
+                    ]
+                }
+            ]
+        },
+        {
+            "cinema": "Schauburg",
+            "screenings": [
+                {
+                    "time": "19:00",
+                    "tags": [
+                        "OmU"
+                    ]
+                }
             ]
         }
     ],
@@ -251,14 +398,23 @@
         {
             "cinema": "Cineplex",
             "screenings": [
-                "20:00"
+                {
+                    "time": "20:00",
+                    "tags": []
+                }
             ]
         },
         {
             "cinema": "Passage Kinos",
             "screenings": [
-                "15:45",
-                "18:00"
+                {
+                    "time": "15:45",
+                    "tags": []
+                },
+                {
+                    "time": "18:00",
+                    "tags": []
+                }
             ]
         }
     ],
@@ -266,7 +422,10 @@
         {
             "cinema": "Cineplex",
             "screenings": [
-                "17:30"
+                {
+                    "time": "17:30",
+                    "tags": []
+                }
             ]
         }
     ],
@@ -274,13 +433,19 @@
         {
             "cinema": "Cineplex",
             "screenings": [
-                "14:30"
+                {
+                    "time": "14:30",
+                    "tags": []
+                }
             ]
         },
         {
             "cinema": "Passage Kinos",
             "screenings": [
-                "14:00"
+                {
+                    "time": "14:00",
+                    "tags": []
+                }
             ]
         }
     ],
@@ -288,7 +453,10 @@
         {
             "cinema": "Cineplex",
             "screenings": [
-                "15:00"
+                {
+                    "time": "15:00",
+                    "tags": []
+                }
             ]
         }
     ],
@@ -296,7 +464,10 @@
         {
             "cinema": "Cineplex",
             "screenings": [
-                "19:30"
+                {
+                    "time": "19:30",
+                    "tags": []
+                }
             ]
         }
     ],
@@ -304,14 +475,23 @@
         {
             "cinema": "Kinobar \"Prager Frühling\"",
             "screenings": [
-                "20:45"
+                {
+                    "time": "20:45",
+                    "tags": []
+                }
             ]
         },
         {
             "cinema": "Passage Kinos",
             "screenings": [
-                "17:15",
-                "19:00"
+                {
+                    "time": "17:15",
+                    "tags": []
+                },
+                {
+                    "time": "19:00",
+                    "tags": []
+                }
             ]
         }
     ],
@@ -319,7 +499,10 @@
         {
             "cinema": "Kinobar \"Prager Frühling\"",
             "screenings": [
-                "18:00"
+                {
+                    "time": "18:00",
+                    "tags": []
+                }
             ]
         }
     ],
@@ -327,7 +510,10 @@
         {
             "cinema": "Kinobar \"Prager Frühling\"",
             "screenings": [
-                "16:00"
+                {
+                    "time": "16:00",
+                    "tags": []
+                }
             ]
         }
     ],
@@ -335,31 +521,40 @@
         {
             "cinema": "Passage Kinos",
             "screenings": [
-                "20:15"
-            ]
-        }
-    ],
-    "Der Meister und Margarita (OmU)": [
-        {
-            "cinema": "Passage Kinos",
-            "screenings": [
-                "14:15",
-                "20:30"
+                {
+                    "time": "20:15",
+                    "tags": []
+                }
             ]
         },
         {
-            "cinema": "Schauburg",
+            "cinema": "Schaubühne Lindenfels",
             "screenings": [
-                "19:00"
+                {
+                    "time": "21:30",
+                    "tags": [
+                        "OmU"
+                    ]
+                }
             ]
         }
     ],
-    "Flow (OF)": [
+    "Flow": [
         {
             "cinema": "Passage Kinos",
             "screenings": [
-                "13:45",
-                "18:15"
+                {
+                    "time": "13:45",
+                    "tags": [
+                        "OV"
+                    ]
+                },
+                {
+                    "time": "18:15",
+                    "tags": [
+                        "OV"
+                    ]
+                }
             ]
         }
     ],
@@ -367,7 +562,10 @@
         {
             "cinema": "Passage Kinos",
             "screenings": [
-                "13:30"
+                {
+                    "time": "13:30",
+                    "tags": []
+                }
             ]
         }
     ],
@@ -375,7 +573,10 @@
         {
             "cinema": "Passage Kinos",
             "screenings": [
-                "16:00"
+                {
+                    "time": "16:00",
+                    "tags": []
+                }
             ]
         }
     ],
@@ -383,7 +584,10 @@
         {
             "cinema": "Passage Kinos",
             "screenings": [
-                "20:00"
+                {
+                    "time": "20:00",
+                    "tags": []
+                }
             ]
         }
     ],
@@ -391,15 +595,27 @@
         {
             "cinema": "Passage Kinos",
             "screenings": [
-                "15:30",
-                "18:00"
+                {
+                    "time": "15:30",
+                    "tags": []
+                },
+                {
+                    "time": "18:00",
+                    "tags": []
+                }
             ]
         },
         {
             "cinema": "Schauburg",
             "screenings": [
-                "17:00",
-                "19:45"
+                {
+                    "time": "17:00",
+                    "tags": []
+                },
+                {
+                    "time": "19:45",
+                    "tags": []
+                }
             ]
         }
     ],
@@ -407,13 +623,19 @@
         {
             "cinema": "Passage Kinos",
             "screenings": [
-                "20:45"
+                {
+                    "time": "20:45",
+                    "tags": []
+                }
             ]
         },
         {
             "cinema": "Schauburg",
             "screenings": [
-                "19:30"
+                {
+                    "time": "19:30",
+                    "tags": []
+                }
             ]
         }
     ],
@@ -421,8 +643,14 @@
         {
             "cinema": "Passage Kinos",
             "screenings": [
-                "13:45",
-                "20:30"
+                {
+                    "time": "13:45",
+                    "tags": []
+                },
+                {
+                    "time": "20:30",
+                    "tags": []
+                }
             ]
         }
     ],
@@ -430,7 +658,10 @@
         {
             "cinema": "Passage Kinos",
             "screenings": [
-                "17:30"
+                {
+                    "time": "17:30",
+                    "tags": []
+                }
             ]
         }
     ],
@@ -438,23 +669,23 @@
         {
             "cinema": "Schauburg",
             "screenings": [
-                "16:45"
+                {
+                    "time": "16:45",
+                    "tags": []
+                }
             ]
         }
     ],
-    "Balconettes (OmU)": [
+    "Like A Complete Unknown": [
         {
             "cinema": "Schaubühne Lindenfels",
             "screenings": [
-                "21:30"
-            ]
-        }
-    ],
-    "Like A Complete Unknown (OmU)": [
-        {
-            "cinema": "Schaubühne Lindenfels",
-            "screenings": [
-                "18:45"
+                {
+                    "time": "18:45",
+                    "tags": [
+                        "OmU"
+                    ]
+                }
             ]
         }
     ]
