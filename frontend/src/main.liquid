@@ -49,14 +49,16 @@
                         <span class="title clamp--2 movie_title back">{{movie.title}}</span>
                         <div class="flex flex--row flex--top">
                             <img class="image-dither movie_poster"
-                                src={{movie.poster_url}}>
-                            <span class="label label--outline movie_rating">{{movie.rating}}</span>
+                                src={{movie.poster_url | default: "https://usetrmnl.com/images/plugins/trmnl--render.svg"}} />
+                            {%if movie.rating%}
+                                <span class="label label--outline movie_rating">{{movie.rating}}</span>
+                            {%endif%}
                         </div>
                         {% for cinema in movie.cinemas %}
                         <div class="item">
                             <div class="meta"></div>
                             <div class="content">
-                                <span class="title title--small">{{cinema.name}}</span>
+                                <span class="title title--small">{{cinema.cinema}}</span>
                                 <div class="flex gap--small" style="margin-top: 5px; flex-wrap: wrap;">
                                     {% for screening in cinema.screenings %}
                                         <span class="label label--outline label--small movie_timeslot">
