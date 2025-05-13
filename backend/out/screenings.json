@@ -1,0 +1,461 @@
+{
+    "Blood & Sinners": [
+        {
+            "cinema": "CineStar - Der Filmpalast",
+            "screenings": [
+                "19:30"
+            ]
+        },
+        {
+            "cinema": "Cineplex",
+            "screenings": [
+                "17:00"
+            ]
+        }
+    ],
+    "Die Legende von Ochi": [
+        {
+            "cinema": "CineStar - Der Filmpalast",
+            "screenings": [
+                "14:40"
+            ]
+        },
+        {
+            "cinema": "Cineplex",
+            "screenings": [
+                "14:45"
+            ]
+        },
+        {
+            "cinema": "Passage Kinos",
+            "screenings": [
+                "15:30"
+            ]
+        },
+        {
+            "cinema": "Schauburg",
+            "screenings": [
+                "16:45"
+            ]
+        }
+    ],
+    "Ein Minecraft Film": [
+        {
+            "cinema": "CineStar - Der Filmpalast",
+            "screenings": [
+                "14:00",
+                "17:10",
+                "19:50"
+            ]
+        },
+        {
+            "cinema": "Cineplex",
+            "screenings": [
+                "14:30",
+                "17:00",
+                "20:00"
+            ]
+        }
+    ],
+    "Ein Minecraft Film 3D": [
+        {
+            "cinema": "CineStar - Der Filmpalast",
+            "screenings": [
+                "14:40",
+                "17:20"
+            ]
+        }
+    ],
+    "Last Breath": [
+        {
+            "cinema": "CineStar - Der Filmpalast",
+            "screenings": [
+                "17:05",
+                "20:00"
+            ]
+        },
+        {
+            "cinema": "Cineplex",
+            "screenings": [
+                "17:15",
+                "20:00"
+            ]
+        }
+    ],
+    "Moon, der Panda": [
+        {
+            "cinema": "CineStar - Der Filmpalast",
+            "screenings": [
+                "14:00"
+            ]
+        },
+        {
+            "cinema": "Cineplex",
+            "screenings": [
+                "14:30"
+            ]
+        }
+    ],
+    "Paddington in Peru": [
+        {
+            "cinema": "CineStar - Der Filmpalast",
+            "screenings": [
+                "14:25"
+            ]
+        }
+    ],
+    "Schneewittchen": [
+        {
+            "cinema": "CineStar - Der Filmpalast",
+            "screenings": [
+                "13:50"
+            ]
+        },
+        {
+            "cinema": "Cineplex",
+            "screenings": [
+                "17:00"
+            ]
+        }
+    ],
+    "Screamboat": [
+        {
+            "cinema": "CineStar - Der Filmpalast",
+            "screenings": [
+                "19:50"
+            ]
+        }
+    ],
+    "The Accountant 2": [
+        {
+            "cinema": "CineStar - Der Filmpalast",
+            "screenings": [
+                "16:40",
+                "19:40"
+            ]
+        },
+        {
+            "cinema": "Cineplex",
+            "screenings": [
+                "19:45"
+            ]
+        }
+    ],
+    "The Amateur": [
+        {
+            "cinema": "CineStar - Der Filmpalast",
+            "screenings": [
+                "16:30"
+            ]
+        },
+        {
+            "cinema": "Cineplex",
+            "screenings": [
+                "20:15"
+            ]
+        }
+    ],
+    "Thunderbolts": [
+        {
+            "cinema": "CineStar - Der Filmpalast",
+            "screenings": [
+                "13:50",
+                "16:40",
+                "19:45"
+            ]
+        },
+        {
+            "cinema": "Cineplex",
+            "screenings": [
+                "14:30",
+                "17:00"
+            ]
+        }
+    ],
+    "Thunderbolts (OF)": [
+        {
+            "cinema": "CineStar - Der Filmpalast",
+            "screenings": [
+                "19:15"
+            ]
+        }
+    ],
+    "Thunderbolts 3D": [
+        {
+            "cinema": "CineStar - Der Filmpalast",
+            "screenings": [
+                "16:55"
+            ]
+        },
+        {
+            "cinema": "Cineplex",
+            "screenings": [
+                "19:45"
+            ]
+        }
+    ],
+    "Until Dawn": [
+        {
+            "cinema": "CineStar - Der Filmpalast",
+            "screenings": [
+                "16:30",
+                "20:00"
+            ]
+        },
+        {
+            "cinema": "Cineplex",
+            "screenings": [
+                "20:15"
+            ]
+        }
+    ],
+    "Voilà, Papa! - Der fast perfekte Schwiegersohn": [
+        {
+            "cinema": "CineStar - Der Filmpalast",
+            "screenings": [
+                "14:15"
+            ]
+        },
+        {
+            "cinema": "Cineplex",
+            "screenings": [
+                "17:30"
+            ]
+        }
+    ],
+    "Bambi - Eine Lebensgeschichte aus dem Walde": [
+        {
+            "cinema": "Cineplex",
+            "screenings": [
+                "14:45"
+            ]
+        }
+    ],
+    "Der König der Könige": [
+        {
+            "cinema": "Cineplex",
+            "screenings": [
+                "15:00"
+            ]
+        }
+    ],
+    "Der Meister und Margarita": [
+        {
+            "cinema": "Cineplex",
+            "screenings": [
+                "16:45"
+            ]
+        }
+    ],
+    "Der Pinguin meines Lebens": [
+        {
+            "cinema": "Cineplex",
+            "screenings": [
+                "20:00"
+            ]
+        },
+        {
+            "cinema": "Passage Kinos",
+            "screenings": [
+                "15:45",
+                "18:00"
+            ]
+        }
+    ],
+    "Drop - Tödliches Date": [
+        {
+            "cinema": "Cineplex",
+            "screenings": [
+                "17:30"
+            ]
+        }
+    ],
+    "Grüße vom Mars": [
+        {
+            "cinema": "Cineplex",
+            "screenings": [
+                "14:30"
+            ]
+        },
+        {
+            "cinema": "Passage Kinos",
+            "screenings": [
+                "14:00"
+            ]
+        }
+    ],
+    "Lars ist LOL": [
+        {
+            "cinema": "Cineplex",
+            "screenings": [
+                "15:00"
+            ]
+        }
+    ],
+    "Shadow Force - Die letzte Mission": [
+        {
+            "cinema": "Cineplex",
+            "screenings": [
+                "19:30"
+            ]
+        }
+    ],
+    "Wenn das Licht zerbricht": [
+        {
+            "cinema": "Kinobar \"Prager Frühling\"",
+            "screenings": [
+                "20:45"
+            ]
+        },
+        {
+            "cinema": "Passage Kinos",
+            "screenings": [
+                "17:15",
+                "19:00"
+            ]
+        }
+    ],
+    "Wunderschöner": [
+        {
+            "cinema": "Kinobar \"Prager Frühling\"",
+            "screenings": [
+                "18:00"
+            ]
+        }
+    ],
+    "Über uns von uns": [
+        {
+            "cinema": "Kinobar \"Prager Frühling\"",
+            "screenings": [
+                "16:00"
+            ]
+        }
+    ],
+    "Balconettes": [
+        {
+            "cinema": "Passage Kinos",
+            "screenings": [
+                "20:15"
+            ]
+        }
+    ],
+    "Der Meister und Margarita (OmU)": [
+        {
+            "cinema": "Passage Kinos",
+            "screenings": [
+                "14:15",
+                "20:30"
+            ]
+        },
+        {
+            "cinema": "Schauburg",
+            "screenings": [
+                "19:00"
+            ]
+        }
+    ],
+    "Flow (OF)": [
+        {
+            "cinema": "Passage Kinos",
+            "screenings": [
+                "13:45",
+                "18:15"
+            ]
+        }
+    ],
+    "Heldin": [
+        {
+            "cinema": "Passage Kinos",
+            "screenings": [
+                "13:30"
+            ]
+        }
+    ],
+    "Ich will alles. Hildegard Knef": [
+        {
+            "cinema": "Passage Kinos",
+            "screenings": [
+                "16:00"
+            ]
+        }
+    ],
+    "Im Prinzip Familie": [
+        {
+            "cinema": "Passage Kinos",
+            "screenings": [
+                "20:00"
+            ]
+        }
+    ],
+    "Islands": [
+        {
+            "cinema": "Passage Kinos",
+            "screenings": [
+                "15:30",
+                "18:00"
+            ]
+        },
+        {
+            "cinema": "Schauburg",
+            "screenings": [
+                "17:00",
+                "19:45"
+            ]
+        }
+    ],
+    "Kein Tier. So Wild.": [
+        {
+            "cinema": "Passage Kinos",
+            "screenings": [
+                "20:45"
+            ]
+        },
+        {
+            "cinema": "Schauburg",
+            "screenings": [
+                "19:30"
+            ]
+        }
+    ],
+    "Oslo-Stories: Träume": [
+        {
+            "cinema": "Passage Kinos",
+            "screenings": [
+                "13:45",
+                "20:30"
+            ]
+        }
+    ],
+    "Volveréis - Ein fast klassischer Liebesfilm": [
+        {
+            "cinema": "Passage Kinos",
+            "screenings": [
+                "17:30"
+            ]
+        }
+    ],
+    "Konklave": [
+        {
+            "cinema": "Schauburg",
+            "screenings": [
+                "16:45"
+            ]
+        }
+    ],
+    "Balconettes (OmU)": [
+        {
+            "cinema": "Schaubühne Lindenfels",
+            "screenings": [
+                "21:30"
+            ]
+        }
+    ],
+    "Like A Complete Unknown (OmU)": [
+        {
+            "cinema": "Schaubühne Lindenfels",
+            "screenings": [
+                "18:45"
+            ]
+        }
+    ]
+}
