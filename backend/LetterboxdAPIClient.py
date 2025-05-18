@@ -7,7 +7,7 @@ MOVIE_TITLE_REPLACE_MAP = [{" ": "+"}, {"&": "%26"}]
 
 MAX_RETRIES = 7
 MIN_DELAY = 2 # seconds
-INITIAL_DELAY = 8 # seconds
+INITIAL_DELAY = 4 # seconds
 
 def get_movie_rating_and_poster(movie_title: str) -> tuple:
     print("Checking Movie: " + movie_title)
