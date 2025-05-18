@@ -1,0 +1,12 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run Screenings Scraper",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/backend/main.py",
+            "console": "integratedTerminal"
+        }
+    ]
+}
