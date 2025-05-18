@@ -25,4 +25,6 @@ jobs:
           pip install -r backend/requirements.txt 
 
       - name: Run script
+        env:
+            TRMNL_WEBHOOK_URL: ${{ secrets.TRMNL_WEBHOOK_URL }}
         run: python backend/main.py
