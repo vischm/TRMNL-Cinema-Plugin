@@ -3,9 +3,11 @@ import time
 import random
 
 LETTERBOXD_URL = "https://api.letterboxd.com/api/v0/"
+MOVIE_TITLE_REPLACE_MAP = [{" ": "+"}, {"&": "%26"}]
+
 MAX_RETRIES = 7
 MIN_DELAY = 2 # seconds
-INITIAL_DELAY = 2 # seconds
+INITIAL_DELAY = 8 # seconds
 
 def get_movie_rating_and_poster(movie_title: str) -> tuple:
     print("Checking Movie: " + movie_title)
@@ -45,7 +47,10 @@ def get_movie_rating_and_poster(movie_title: str) -> tuple:
     
 
 def get_request_url(movie_title: str):
-    movie_title_for_url = movie_title.replace(" ", "+")
+    movie_title_for_url = movie_title
+    for replacement in MOVIE_TITLE_REPLACE_MAP:
+        for old, new in replacement.items():
+            movie_title_for_url = movie_title_for_url.replace(old, new)
     return f"{LETTERBOXD_URL}search?input=" + movie_title_for_url + "&include=FilmSearchItem"
 
 def select_search_result(response: str) -> str:
