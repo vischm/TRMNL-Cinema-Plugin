@@ -22,6 +22,9 @@ def get_movie_rating_and_poster(movie_title: str) -> tuple:
             if r.status_code == 200:
                 print("Letterboxd API is reachable.")
                 search_result = select_search_result(r.json())
+                if( not search_result):
+                    print(f"No suitable search result found for '{movie_title}'.")
+                    return None, None
                 rating = extract_rating(search_result)
                 poster = extract_poster_url(search_result)
                 time.sleep(MIN_DELAY)
