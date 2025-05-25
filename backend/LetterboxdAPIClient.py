@@ -56,6 +56,8 @@ def get_request_url(movie_title: str):
 def select_search_result(response: str) -> str:
     try:
         items = response.get('items', [])
+        # Filter out all items with a 'score' smaller than half of the max score
+        items = [item for item in items if item.get('score', 0) >= 0.5 * items[0].get('score', 0)]
         # Take up to the first 3 movies
         film_candidates = [item['film'] for item in items[:3] if 'film' in item]
         if not film_candidates:
