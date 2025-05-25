@@ -1,6 +1,6 @@
 from LetterboxdAPIClient import get_movie_rating_and_poster
 
-MOVIES_TO_IGNORE = ["Sneak Preview"]
+MOVIES_TO_IGNORE = ["Sneak Preview", "CineSneak", "Sonderveranstaltung", "Dokumentarfilm(e)", "Shorts Attack - Kurzfilme"]
 
 def clean_screening_data(screening_data) -> str:
     # Create json structure that is expected by the frontend
