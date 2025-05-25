@@ -3,7 +3,7 @@ name: Run Screening Scraper Script Nightly
 on:
   push: 
   schedule:
-    - cron: '0 2 * * *'
+    - cron: '16 2 * * *'
   workflow_dispatch:
 
 jobs:
