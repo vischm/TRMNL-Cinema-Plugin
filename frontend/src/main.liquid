@@ -12,12 +12,6 @@
 
             <!-- Start TRMNL Code -->
             <style>
-                .movie_title {
-                    height: 52px;
-                    word-break: break-word !important;
-                    /* Prevents line breaks inside words */
-                }
-
                 .movie_poster {
                     height: 130px;
                     object-fit: contain;
@@ -45,8 +39,12 @@
             <div class="layout layout--top">
                 <div class="columns gap--large">
                     {% for movie in movies limit:4 %}
-                    <div class="column" data-list-limit="true" data-list-max-height="180" data-list-hidden-count="true">
-                        <span class="title clamp--2 movie_title back">{{movie.title}}</span>
+                    <div class="column">
+                        <div class="layout richtext h--[70px]">
+                            <div class="content content--large text--center m--1.5" data-clamp="3">
+                                {{movie.title}}
+                            </div>
+                        </div>
                         <div class="flex flex--row flex--top">
                             <img class="image-dither movie_poster"
                                 src={{movie.poster_url | default: "https://usetrmnl.com/images/plugins/trmnl--render.svg"}} />
@@ -54,22 +52,24 @@
                                 <span class="label label--outline movie_rating">{{movie.rating}}</span>
                             {%endif%}
                         </div>
-                        {% for cinema in movie.cinemas %}
-                        <div class="item">
-                            <div class="meta"></div>
-                            <div class="content">
-                                <span class="title title--small">{{cinema.cinema}}</span>
-                                <div class="flex gap--small" style="margin-top: 5px; flex-wrap: wrap;">
-                                    {% for screening in cinema.screenings %}
-                                        <span class="label label--outline label--small movie_timeslot">
-                                            {{ screening.time }} 
-                                            {% for tag in screening.tags %} {{ tag }} {% endfor %}
-                                        </span>
-                                    {% endfor %}
+                        <div class="flex flex--col gap--small"  data-overflow="true"  data-overflow-counter="true">
+                            {% for cinema in movie.cinemas %}
+                            <div class="item">
+                                <div class="meta"></div>
+                                <div class="content">
+                                    <span class="title title--small">{{cinema.cinema}}</span>
+                                    <div class="flex gap--small" style="margin-top: 5px; flex-wrap: wrap;">
+                                        {% for screening in cinema.screenings %}
+                                            <span class="label label--outline label--small movie_timeslot">
+                                                {{ screening.time }} 
+                                                {% for tag in screening.tags %} {{ tag }} {% endfor %}
+                                            </span>
+                                        {% endfor %}
+                                    </div>
                                 </div>
                             </div>
+                            {% endfor  %}
                         </div>
-                        {% endfor  %}
                     </div> 
                     {% endfor %}                   
                 </div>
