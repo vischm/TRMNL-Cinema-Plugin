@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon --watch src/main.liquid --watch data/data.json --exec node index.js"
+    "dev": "nodemon --watch src/main.liquid --watch samples/sample-data.json --exec node index.js"
   },
   "repository": {
     "type": "git",

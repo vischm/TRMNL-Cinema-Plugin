@@ -7,7 +7,7 @@ const engine = new Liquid({
 });
 
 const templateFile = 'main.liquid';
-const data = JSON.parse(fs.readFileSync('./data/data.json', 'utf8'));
+const data = JSON.parse(fs.readFileSync('./samples/sample-data.json', 'utf8'));
 
 engine.renderFile(templateFile, data).then(output => {
   fs.writeFileSync('./output/result.html', output);
