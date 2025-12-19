@@ -10,6 +10,6 @@ const templateFile = 'main.liquid';
 const data = JSON.parse(fs.readFileSync('./samples/sample-data.json', 'utf8'));
 
 engine.renderFile(templateFile, data).then(output => {
-  fs.writeFileSync('./output/result.html', output);
-  console.log('Rendered output saved to output/result.html');
+  fs.writeFileSync('./out/preview.html', output);
+  console.log('Rendered preview output saved to out/preview.html');
 });
