@@ -7,8 +7,26 @@ from bs4 import BeautifulSoup
 # Constants
 HEADERS = {"User-Agent": "Mozilla/5.0"}
 BASE_URL = "https://www.cinema.de/kino/kinoprogramm"
-POSSIBLE_TAGS = ["3D", "(OmU)", "(OF)"]
-TAG_REPLACEMENT_MAP = {"OF": "OV"} # Replace some tags with more common abbreviations
+POSSIBLE_TAGS = [
+    "(HFR 3D) (Deutsch/HFR 3D)",
+    "(HFR) (Deutsch/HFR)",
+    "3D",
+    "(OmU)",
+    "(OF)",
+    "(Tükische Sprachfassung)",
+    "(Ukrainische Sprachfassung)",
+    "(deutsche Dialoge, englische Songs)",
+]
+
+# Normalize tags to concise, common abbreviations
+TAG_REPLACEMENT_MAP = {
+    "(HFR 3D) (Deutsch/HFR 3D)": ["HFR", "3D"],
+    "(HFR) (Deutsch/HFR)": ["HFR"],
+    "OF": ["OV"],
+    "Tükische Sprachfassung": ["TUR"],
+    "Ukrainische Sprachfassung": ["UKR"],
+}
+TAG_TO_IGNORE = ["deutsche Dialoge, englische Songs"]  # Tags to be removed from the final tags list
 
 
 def scrape_screenings(city: str) -> dict:
@@ -54,10 +72,12 @@ def parse_title_and_tags(raw_title: str) -> Tuple[str, List[str]]:
     title = raw_title
 
     for possible_tag in POSSIBLE_TAGS:
-        if possible_tag in raw_title:
-            clean_tag = possible_tag.strip("()")
-            clean_tag = TAG_REPLACEMENT_MAP.get(clean_tag, clean_tag)
-            tags.append(clean_tag)
+        if possible_tag in title:
+            tag_values = TAG_REPLACEMENT_MAP.get(possible_tag, [possible_tag])
+            for tag_value in tag_values:
+                tag_value = tag_value.strip("() ")
+                if tag_value not in TAG_TO_IGNORE:
+                    tags.append(tag_value)
             title = title.replace(possible_tag, "").strip()
 
     return title, tags
