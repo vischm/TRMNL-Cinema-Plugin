@@ -24,6 +24,7 @@ A plugin for [TRMNL displays](https://usetrmnl.com/) that shows the highest-rate
 cinema/
 ├── backend/                      # Python backend for data processing
 │   ├── main.py                  # Manages data scraping, cleaning, and webhook posting
+│   ├── config.json              # Configure the project
 │   ├── ScreeningScraper.py      # Scrapes cinema screening data
 │   ├── ScreeningDataCleanup.py  # Cleans and formats screening data
 │   ├── LetterboxdAPIClient.py   # Letterboxd API integration for additional movie information
@@ -68,11 +69,27 @@ npm install
 
 ### Configuration
 
+#### Environment Variables
+
 Set the TRMNL webhook URL as an environment variable:
 
 ```bash
 set TRMNL_WEBHOOK_URL=your_webhook_url_here
 ```
+
+#### Project Settings
+
+Configure the backend behavior in `backend/config.json`:
+
+```json
+{
+  "city": "leipzig",
+  "cityDisplayName": "Leipzig"
+}
+```
+
+- **city**: The German city to scrape cinema screenings for (used for cinema.de queries)
+- **cityDisplayName**: Display name shown on the TRMNL device
 
 ## Usage
 

@@ -6,14 +6,16 @@ import json
 import os
 
 if __name__ == "__main__":
-    city = "leipzig"
-    data = scrape_screenings(city)
-    json_data = clean_screening_data(data)
+    with open('backend/config.json', 'r') as f:
+        config = json.load(f)
 
     webhook_url = os.environ.get("TRMNL_WEBHOOK_URL")
     if not webhook_url:
         print("Webhook URL not set in environment variables.")
         exit(1)
+
+    data = scrape_screenings(config["city"])
+    json_data = clean_screening_data(data, config["cityDisplayName"])
 
     post_to_webhook(json_data, webhook_url)
 
