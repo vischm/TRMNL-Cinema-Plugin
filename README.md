@@ -83,13 +83,17 @@ Configure the backend behavior in `backend/config.json`:
 
 ```json
 {
-  "city": "leipzig",
-  "cityDisplayName": "Leipzig"
+  "city": {
+    "name": "NAME_OF_YOUR_CITY_USED_FOR_CINEMA_DE",
+    "displayName": "NAME_OF_YOUR_CITY_AS_DISPLAYED_ON_THE_TRMNL_DEVICE"
+  },
+  "recentlyWatchedMovies": {
+    "excludeWatchedMovies": true,
+    "letterboxdUsername": "LETTERBOXD_USERNAME",
+    "numberOfDaysForRecentWatches": 90
+  }
 }
 ```
-
-- **city**: The German city to scrape cinema screenings for (used for cinema.de queries)
-- **cityDisplayName**: Display name shown on the TRMNL device
 
 ## Usage
 
@@ -109,8 +113,7 @@ The frontend is deployed directly through the **TRMNL web interface**:
 #### Running the Backend Manually
 
 ```bash
-cd backend
-python main.py
+python backend/main.py
 ```
 
 This will:

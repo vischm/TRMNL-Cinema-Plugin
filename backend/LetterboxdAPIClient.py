@@ -9,7 +9,7 @@ MAX_RETRIES = 7
 MIN_DELAY = 2 # seconds
 INITIAL_DELAY = 4 # seconds
 
-def get_movie_rating_and_poster(movie_title: str) -> tuple:
+def get_movie_data(movie_title: str) -> tuple:
     print("Checking Movie: " + movie_title)
     url = get_request_url(movie_title)
 
@@ -27,8 +27,9 @@ def get_movie_rating_and_poster(movie_title: str) -> tuple:
                     return None, None
                 rating = extract_rating(search_result)
                 poster = extract_poster_url(search_result)
+                tmdb_id = extract_tmdb_id(search_result)
                 time.sleep(MIN_DELAY)
-                return rating, poster
+                return rating, poster, tmdb_id
 
             elif r.status_code == 429:
                 print(f"Rate limited (429). Retrying in {delay:.1f}s...")
@@ -46,7 +47,7 @@ def get_movie_rating_and_poster(movie_title: str) -> tuple:
             delay += random.uniform(0, 1)
 
     print("Exceeded maximum retries.")
-    return None, None
+    return None, None, None
     
 
 def get_request_url(movie_title: str):
@@ -85,5 +86,14 @@ def extract_rating(search_result: str) -> float:
 def extract_poster_url(search_result: str) -> str:
     try:
         return search_result['poster']['sizes'][0]['url']
+    except KeyError:
+        return None
+    
+def extract_tmdb_id(search_result: str) -> int:
+    try:
+        links = search_result['links']
+        for link in links:
+            if link['type'] == 'tmdb':
+                return int(link['id'])
     except KeyError:
         return None
