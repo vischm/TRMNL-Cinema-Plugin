@@ -22,6 +22,10 @@ A plugin for [TRMNL displays](https://usetrmnl.com/) that shows the highest-rate
 
 ```
 cinema/
+├── .github/workflows/            # GitHub Actions workflows
+│   └── nightly-run.yml          # Scheduled workflow to run scraper nightly
+├── .vscode/                      # VS Code configuration
+│   └── launch.json              # Debug and launch configurations
 ├── backend/                      # Python backend for data processing
 │   ├── main.py                  # Manages data scraping, cleaning, and webhook posting
 │   ├── config.json              # Configure the project
@@ -109,6 +113,14 @@ The frontend is deployed directly through the **TRMNL web interface**:
 3. Paste it into the TRMNL plugin editor
 
 ### Development & Debugging
+
+#### VS Code Launch Configurations
+
+This project includes pre-configured launch configurations for easy debugging and development. Access them via the **Run and Debug** view (Ctrl+Shift+D):
+
+- **Backend** — Launches the backend Python script (`backend/main.py`) in the debugger
+- **Frontend** — Builds the frontend once by running `index.js`
+- **Frontend (watch)** — Starts the development server with continuous hot-reloading via `npm run dev`
 
 #### Running the Backend Manually
 
