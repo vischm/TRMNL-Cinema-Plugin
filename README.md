@@ -104,7 +104,9 @@ Configure the backend behavior in `backend/config.json`:
 ### Production Deployment
 
 #### Backend
-The backend runs automatically via a **GitHub Actions cronjob** that executes daily at 2:16 AM UTC (configured in [.github/workflows/nightly-run.yml](.github/workflows/nightly-run.yml)). It scrapes cinema screening data for Leipzig, cleans it, and posts it to your TRMNL webhook URL.
+The backend runs automatically via a **GitHub Actions cronjob** that executes daily at 2:16 AM UTC (configured in [.github/workflows/nightly-run.yml](.github/workflows/nightly-run.yml)). It scrapes cinema screening data for the city defined in the config file, cleans it, and posts it to your TRMNL webhook URL.
+
+**Note:** In production, both `config.json` and the TRMNL webhook URL are stored as GitHub repository secrets (`CONFIG_JSON` and `TRMNL_WEBHOOK_URL`).
 
 #### Frontend
 The frontend is deployed directly through the **TRMNL web interface**:
