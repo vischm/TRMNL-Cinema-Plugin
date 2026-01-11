@@ -1,17 +1,16 @@
 import feedparser
-from typing import List, Dict
 from datetime import datetime, timedelta
 
 BASE_FEED = "https://letterboxd.com/{username}/rss/"
 
-def fetch_recent_watches(username: str, number_of_days: int) -> List[Dict]:
+def fetch_recent_watches(username: str, number_of_days: int) -> list[int]:
     url = build_feed_url(username)
     feed = feedparser.parse(url)
 
     if getattr(feed, 'status', None) not in (200, None) or feed.bozo:
         raise RuntimeError(f"RSS fetch failed or invalid feed for {url}")
 
-    entries: List[Dict] = []
+    entries: list[int] = []
     for entry in feed.entries:
         watched_date = entry.get("letterboxd_watcheddate")
         if is_less_than_n_days_ago(watched_date, n=number_of_days):

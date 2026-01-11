@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 import requests
 import time
 import random
@@ -9,7 +10,13 @@ MAX_RETRIES = 7
 MIN_DELAY = 2 # seconds
 INITIAL_DELAY = 4 # seconds
 
-def get_movie_data(movie_title: str) -> tuple:
+@ dataclass
+class MovieData:
+    rating: float | None = None
+    poster_url: str | None = None
+    tmdb_id: int | None = None
+
+def get_movie_data(movie_title: str) -> MovieData | None:
     print("Checking Movie: " + movie_title)
     url = get_request_url(movie_title)
 
@@ -24,12 +31,12 @@ def get_movie_data(movie_title: str) -> tuple:
                 search_result = select_search_result(r.json())
                 if( not search_result):
                     print(f"No suitable search result found for '{movie_title}'.")
-                    return None, None
+                    return None
                 rating = extract_rating(search_result)
                 poster = extract_poster_url(search_result)
                 tmdb_id = extract_tmdb_id(search_result)
                 time.sleep(MIN_DELAY)
-                return rating, poster, tmdb_id
+                return MovieData(rating, poster, tmdb_id)
 
             elif r.status_code == 429:
                 print(f"Rate limited (429). Retrying in {delay:.1f}s...")
@@ -47,7 +54,7 @@ def get_movie_data(movie_title: str) -> tuple:
             delay += random.uniform(0, 1)
 
     print("Exceeded maximum retries.")
-    return None, None, None
+    return None
     
 
 def get_request_url(movie_title: str):

@@ -1,3 +1,4 @@
+from dataclasses import asdict
 from LetterboxdAPIClient import get_movie_data
 
 MOVIES_TO_IGNORE = ["Sneak Preview", "CineSneak", "Sonderveranstaltung", "Dokumentarfilm(e)", "Shorts Attack - Kurzfilme", "Sondervorstellung"]
@@ -17,13 +18,9 @@ def clean_screening_data(screening_data, city_display_name, recently_watched_tmd
 
     # Get rating and poster for each movie
     for movie in screening_json['movies']:
-        rating, poster, tmdb_id = get_movie_data(movie['title'])
-        if rating is not None:
-            movie['rating'] = rating
-        if poster is not None:
-            movie['poster_url'] = poster
-        if tmdb_id is not None:
-            movie['tmdb_id'] = tmdb_id
+        movie_data = get_movie_data(movie['title'])
+        if movie_data is not None:
+            movie.update(asdict(movie_data))
             
     # Remove recently watched movies
     screening_json['movies'] = [
@@ -32,13 +29,14 @@ def clean_screening_data(screening_data, city_display_name, recently_watched_tmd
     ]
 
     # Sort screening json by rating
-    screening_json["movies"].sort(key=lambda x: x.get('rating', 0), reverse=True)
+    screening_json["movies"].sort(key=lambda x: x.get('rating') or 0, reverse=True)
 
     # Choose top 3 movies
     screening_json["movies"] = screening_json["movies"][:3]
 
-    # Round rating
+    # Round rating when present
     for movie in screening_json['movies']:
-        movie['rating'] = round(movie['rating'], 1)
+        if movie.get('rating') is not None:
+            movie['rating'] = round(movie['rating'], 1)
 
     return  screening_json
