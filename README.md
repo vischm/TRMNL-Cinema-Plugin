@@ -6,6 +6,8 @@ A plugin for [TRMNL displays](https://usetrmnl.com/) that shows the highest-rate
 
 > **Note**: This is a personal learning project by a C++ developer exploring TRMNL plugin development. While functional, the code may not follow all best practices. Feedback, contributions, and suggestions are welcome!
 
+![TRMNL Cinema Plugin Display](TRMNL_Cinema_Plugin_Screenshot.png)
+
 ## How It Works
 
 - **Data Source**: Cinema screenings are scraped from cinema.de
