@@ -6,17 +6,17 @@
 ---
 id: 511825
 name: Cinema
-description: Top-rated films in your cinemas
-recipe_overview: |-
-  Cinema shows the best-rated films currently playing in the cinemas of your city, three on TRMNL OG and four on
-  TRMNL X, together with the showtimes that are still to come today. The programme comes from cinema.de and covers
-  hundreds of German towns and cities, from Berlin, Hamburg and München to small towns with a single cinema. Every
-  film is looked up on Letterboxd and ranked by its average rating, so the screen always suggests what is worth
-  watching tonight. Showtimes that have already started disappear, and after the last screening of the day the
-  plugin switches to tomorrow's programme. Version tags such as OmU, OV, 3D or 70mm are shown next to each
-  showtime. Enter your Letterboxd username to hide films you have logged in your diary recently, list your
-  favourite cinemas first and hide the ones you never go to. The plugin refreshes hourly and comes with full, half
-  and quadrant layouts in landscape and portrait.
+description: Top-rated films in German cinemas
+recipe_overview: >-
+  Cinema shows the best-rated films currently playing in the cinemas of your German city, three on TRMNL OG and
+  four on TRMNL X, together with the showtimes that are still to come today. It works in Germany only: the
+  programme comes from cinema.de, which covers hundreds of German towns and cities, from Berlin, Hamburg and
+  München to small towns with a single cinema. Every film is looked up on Letterboxd and ranked by its average
+  rating, so the screen always suggests what is worth watching tonight. Showtimes that have already started
+  disappear, and after the last screening of the day the plugin switches to tomorrow's programme. Version tags
+  such as OmU, OV, 3D or 70mm are shown next to each showtime. Enter your Letterboxd username to hide films you
+  have logged in your diary recently, list your favourite cinemas first and hide the ones you never go to. The
+  plugin refreshes hourly and comes with full, half and quadrant layouts in landscape and portrait.
 strategy: polling
 polling_verb: get
 polling_url: ''
@@ -31,12 +31,12 @@ custom_fields:
 - keyname: author_bio
   name: About This Plugin
   field_type: author_bio
-  description: Shows the highest-rated movies currently screening in your city's cinemas, ranked by their Letterboxd rating.
+  description: Shows the highest-rated movies currently screening in your city's cinemas in Germany, ranked by their Letterboxd rating.
   github_url: https://github.com/vischm/TRMNL-Cinema-Plugin
 - keyname: city
   field_type: string
   name: City
-  description: Your city as cinema.de names it, e.g. Leipzig, München or Frankfurt am Main. If it isn't found, paste the cinema.de programme URL of your city instead.
+  description: Your city in Germany as cinema.de names it, e.g. Leipzig, München or Frankfurt am Main. If it isn't found, paste the cinema.de programme URL of your city instead.
   placeholder: Berlin
   default: Berlin
 - keyname: letterboxd_username
