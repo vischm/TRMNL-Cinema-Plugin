@@ -8,15 +8,14 @@ A plugin for [TRMNL displays](https://trmnl.com/) that shows the highest-rated m
 
 ![TRMNL Cinema Plugin Display](TRMNL_Cinema_Plugin_Screenshot.png)
 
-## How It Works
+## Features
 
-The whole plugin runs on TRMNL's servers. There is no backend or scheduled job to host.
-
-- **Data**: On every refresh (hourly), TRMNL runs [src/transform.py](src/transform.py) as a [serverless transform](https://help.trmnl.com/en/articles/14130649-serverless). It scrapes today's programme for the configured city from cinema.de.
-- **Ranking**: Each film is looked up on Letterboxd. Ratings are cached in TRMNL's [Saved State](https://help.trmnl.com/en/articles/16777795-saved-state), so only new films are looked up.
-- **Filtering**: Showtimes that already started are hidden; after the last screening of the day the plugin shows tomorrow's programme. With a Letterboxd username, films you logged recently are hidden.
-- **Display**: Liquid templates for the full, half and quadrant layouts, in landscape and portrait, on TRMNL OG and TRMNL X.
-- **Deployment**: Every push to `main` that touches the plugin is linted, tested and pushed to TRMNL by [GitHub Actions](.github/workflows/trmnl.yml) with [trmnlp](https://github.com/usetrmnl/trmnlp).
+- The 3 best-rated films of the day, each with its cinemas and the showtimes still to come. After the last screening of the day, tomorrow's programme is shown.
+- Works for every town and city on cinema.de.
+- Version tags such as `OmU`, `OV`, `3D` or `70mm` next to each showtime.
+- Optional: hide films you logged on Letterboxd recently, list your preferred cinemas first, exclude cinemas.
+- Full, half and quadrant layouts in landscape and portrait, for TRMNL OG and TRMNL X. The title bar shows the date and the city.
+- Runs entirely on TRMNL's servers: there is nothing to host.
 
 ## Settings
 
@@ -28,16 +27,36 @@ The whole plugin runs on TRMNL's servers. There is no backend or scheduled job t
 | Preferred Cinemas | Optional. Listed first under each film, in this order. Part of the name is enough, e.g. `Schauburg`. |
 | Excluded Cinemas | Optional. Screenings at these cinemas are hidden; a film shown only there drops out. Part of the name is enough. |
 
+## How It Works
+
+- **Data**: On every refresh (hourly), TRMNL runs [src/transform.py](src/transform.py) as a [serverless transform](https://help.trmnl.com/en/articles/14130649-serverless). It scrapes the configured city's programme from cinema.de.
+- **Ranking**: Each film is looked up on Letterboxd. Ratings are cached in TRMNL's [Saved State](https://help.trmnl.com/en/articles/16777795-saved-state), so a refresh only looks up films that are new in the programme.
+- **Display**: The Liquid templates in [src/](src/) render the result with the [TRMNL design framework](https://trmnl.com/framework).
+- **Deployment**: Every push to `main` that touches the plugin is linted, tested and pushed to TRMNL by [GitHub Actions](.github/workflows/trmnl.yml) with [trmnlp](https://github.com/usetrmnl/trmnlp).
+
+## Use It Yourself
+
+Once the plugin is published as a TRMNL Recipe, you can install it from TRMNL directly. Until then, run your own copy (private plugins need TRMNL's Developer edition):
+
+1. Fork this repository.
+2. On TRMNL, create a private plugin with the **Polling** strategy and an empty polling URL. Put the number from its settings URL (`trmnl.com/plugin_settings/<id>/edit`) as `id` into [src/settings.yml](src/settings.yml).
+3. Create an account API key at [trmnl.com/account](https://trmnl.com/account) with the `read` and `content` capabilities, limited to that plugin. Add it to your fork as the repository secret `TRMNL_API_KEY`.
+4. Push to `main` or start the workflow by hand: it lints, tests and uploads the plugin.
+5. Fill in the plugin's settings, upload [assets/theaters.png](assets/theaters.png) as its icon and add it to a playlist.
+
 ## Project Structure
 
 ```
 cinema/
 ├── .github/workflows/
 │   └── trmnl.yml                # Lint, test and push the plugin to TRMNL
+├── .vscode/
+│   └── launch.json              # Debug the transform with live data, or the unit tests
+├── assets/                      # Plugin icon for the TRMNL website (upload by hand)
 ├── bin/
 │   └── trmnlp                   # Runs the trmnlp CLI in Docker
 ├── src/                         # The plugin as TRMNL stores it
-│   ├── settings.yml             # Plugin settings and custom fields (pushed to TRMNL)
+│   ├── settings.yml             # Plugin settings and custom fields
 │   ├── transform.py             # Serverless transform: scraping, ranking, caching
 │   ├── shared.liquid            # Styles and templates shared by all views
 │   ├── full.liquid              # Full screen view
@@ -47,7 +66,7 @@ cinema/
 ├── tests/
 │   ├── test_transform.py        # Unit tests for the transform (offline)
 │   ├── plugin_spec.rb           # Rendering tests on all TRMNL devices (trmnlp test)
-│   └── fixtures/                # Saved cinema.de page
+│   └── fixtures/                # Saved cinema.de page, test poster
 ├── .trmnlp.yml                  # Local preview settings (not pushed)
 └── README.md
 ```
@@ -56,8 +75,17 @@ cinema/
 
 ### Requirements
 
-- [Docker](https://docs.docker.com/get-docker/) for `bin/trmnlp`
-- Python 3.12 with `requests` for the unit tests (TRMNL's serverless runtime uses Python 3.12)
+- [Docker](https://docs.docker.com/get-docker/) for `bin/trmnlp`. On Windows, run it from Git Bash.
+- Python 3.12 with `requests` (TRMNL's serverless runtime uses Python 3.12)
+
+### Run the transform locally
+
+```bash
+python src/transform.py Leipzig                   # prints what the views get, with live data
+python src/transform.py Berlin your_letterboxd    # with a Letterboxd username
+```
+
+In VS Code, the **Transform (live data)** and **Unit tests** launch configurations run the same under the debugger.
 
 ### Preview
 
@@ -66,7 +94,7 @@ bin/trmnlp serve        # live preview at http://localhost:4567, runs the real t
 bin/trmnlp build --png  # renders every view to _build/
 ```
 
-The preview uses the custom field values from [.trmnlp.yml](.trmnlp.yml). Set `LETTERBOXD_USERNAME` in your environment to try the watched-films filter. On Windows, run `bin/trmnlp` from Git Bash.
+The preview uses the custom field values from [.trmnlp.yml](.trmnlp.yml). Set `LETTERBOXD_USERNAME` in your environment to try the watched-films filter.
 
 ### Tests
 
@@ -76,16 +104,24 @@ bin/trmnlp lint                        # TRMNL best practices
 bin/trmnlp test --report report        # renders all views on all devices; open report/index.html
 ```
 
+The rendering tests mock cinema.de and Letterboxd. They deliberately don't freeze the clock with `now:`: trmnlp's frozen clock slows the transform down several times, which broke TRMNL's 5 second limit on GitHub's runners.
+
+### Debugging on TRMNL
+
+TRMNL logs every refresh with the transform's duration and the first few hundred characters of its output. Read them with an account API key that has the `read` capability:
+
+```bash
+curl -H "Authorization: Bearer $TRMNL_API_KEY" "https://trmnl.com/api/plugin_settings/<id>/logs?limit=10"
+```
+
+The output begins with `city_setting`, the city value TRMNL passed in, so a setting that doesn't seem to apply is easy to spot.
+
 ### Constraints of TRMNL's serverless runtime
 
-- 5 seconds and 128 MB per run. The transform stops looking up films after 2.5 seconds and continues on the next refresh.
+- 5 seconds and 128 MB per run. The transform stops looking up films after 2.5 seconds and continues on the next refresh; all network calls run on daemon threads, so none can hold up the end of a run.
 - Only `requests` and the Python standard library are available: HTML is parsed with `html.parser`, RSS with `xml.etree`.
 - There is no time zone database, so German time is computed in `german_now()`.
 - Saved State holds at most 8 KB. `build_state()` trims the rating cache to fit.
-
-### Deployment
-
-Pushes to `main` deploy automatically. The workflow needs the repository secret `TRMNL_API_KEY`: a TRMNL account API key with the `read` and `content` capabilities, created at [trmnl.com/account](https://trmnl.com/account). The plugin it updates is set by `id` in [src/settings.yml](src/settings.yml).
 
 ## Third-Party Assets
 
