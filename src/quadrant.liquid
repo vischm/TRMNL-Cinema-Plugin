@@ -1,0 +1,19 @@
+<div class="layout layout--col layout--stretch">
+  {% if movies.size > 0 %}
+    <div class="flex flex--col gap--small">
+      {% for movie in movies limit: 3 %}
+        <div class="item">
+          <div class="meta"></div>
+          <div class="content">
+            <span class="title title--small" data-clamp="1">{% if movie.rating %}{{ movie.rating }} · {% endif %}{{ movie.title }}</span>
+            <span class="description" data-clamp="1">{{ movie.next_time }} {{ movie.cinemas.first.cinema }}</span>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    {% render "notice", error: error, city: city %}
+  {% endif %}
+</div>
+
+{% render "title_bar", city: city, day: day, error: error, movies: movies, updated_at: updated_at %}

@@ -13,9 +13,3 @@ custom_fields:
   letterboxd_username: "{{ env.LETTERBOXD_USERNAME }}"
   recent_days: 180
   cinemas: ""
-
-# Temporary until the layouts are redesigned: half/quadrant views don't exist yet and
-# full.liquid still nests a layout (it renders fine on framework 3.4.0)
-ignored_lint_rules:
-  - layouts_have_content
-  - no_nested_layouts

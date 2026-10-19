@@ -1,0 +1,13 @@
+<div class="layout layout--col layout--stretch">
+  {% if movies.size > 0 %}
+    <div class="cinema-grid grid grid--cols-1">
+      {% for movie in movies limit: 3 %}
+        {% render "movie_row", movie: movie, lines: 2 %}
+      {% endfor %}
+    </div>
+  {% else %}
+    {% render "notice", error: error, city: city %}
+  {% endif %}
+</div>
+
+{% render "title_bar", city: city, day: day, error: error, movies: movies, updated_at: updated_at %}

@@ -1,0 +1,194 @@
+<style>
+  /* Sizes follow the view and --ui-scale, so the views also fit TRMNL X and portrait screens */
+  .cinema-grid {
+    height: 100%;
+    min-height: 0;
+  }
+
+  .movie {
+    display: grid;
+    min-height: 0;
+    grid-template-rows: auto auto minmax(0, 1fr);
+    grid-template-areas: "title" "poster" "cinemas";
+    gap: calc(10px * var(--ui-scale, 1));
+  }
+
+  .movie__title {
+    grid-area: title;
+    height: calc(var(--full-h) * 0.15);
+    padding: 0 calc(8px * var(--ui-scale, 1));
+    border-radius: calc(10px * var(--ui-scale, 1));
+  }
+
+  .movie__poster {
+    grid-area: poster;
+    position: relative;
+    justify-self: center;
+  }
+
+  .movie__image {
+    display: block;
+    height: calc(var(--full-h) * 0.28);
+    width: auto;
+    aspect-ratio: 2 / 3;  /* reserves the poster's space before it has loaded */
+    object-fit: cover;
+    border-radius: calc(10px * var(--ui-scale, 1));
+  }
+
+  .movie__rating {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    transform: translate(40%, 20%);
+  }
+
+  .movie__cinemas {
+    grid-area: cinemas;
+    min-height: 0;
+  }
+
+  .movie__time {
+    white-space: nowrap;
+  }
+
+  /* Portrait: poster on the left, title and cinemas next to it */
+  .screen--portrait .view--full .movie {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+    grid-template-areas: "poster title" "poster cinemas";
+  }
+
+  .screen--portrait .view--full .movie__title {
+    height: auto;
+    padding: calc(6px * var(--ui-scale, 1)) calc(8px * var(--ui-scale, 1));
+  }
+
+  .screen--portrait .view--full .movie__poster {
+    align-self: start;
+    margin-right: calc(14px * var(--ui-scale, 1));
+  }
+
+  .screen--portrait .view--full .movie__image {
+    height: calc(var(--full-h) * 0.22);
+  }
+
+  /* Compact rows of the half and quadrant views */
+  .movie-row {
+    min-height: 0;
+  }
+
+  .movie-row .movie__poster {
+    flex-shrink: 0;
+  }
+
+  /* No room next to the poster in compact rows: keep the rating badge inside it */
+  .movie-row .movie__rating {
+    right: calc(4px * var(--ui-scale, 1));
+    bottom: calc(4px * var(--ui-scale, 1));
+    transform: none;
+  }
+
+  /* Takes the rest of the row. Its lines span its full width, because the framework's data-clamp
+     measures a flex item's own width: a line only as wide as its text gets trimmed by rounding */
+  .movie-row__text {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .movie-row__text > span {
+    align-self: stretch;
+  }
+
+  /* Only --full-h follows the device, so the compact posters scale with --ui-scale like the text */
+  .view--half_horizontal .movie-row .movie__image {
+    height: calc(135px * var(--ui-scale, 1));
+  }
+
+  .screen--portrait .view--half_horizontal .movie-row .movie__image {
+    height: calc(95px * var(--ui-scale, 1));
+  }
+
+  .view--half_vertical .movie-row .movie__image {
+    height: calc(115px * var(--ui-scale, 1));
+  }
+
+  .screen--portrait .view--half_vertical .movie-row .movie__image {
+    height: calc(130px * var(--ui-scale, 1));
+  }
+</style>
+
+{% template poster %}
+  <div class="movie__poster">
+    {% if movie.poster_url %}
+      <img class="image image-dither movie__image" src="{{ movie.poster_url }}" alt="">
+    {% else %}
+      <svg class="movie__image image-stroke" viewBox="0 0 2 3" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0.05" y="0.05" width="1.9" height="2.9" rx="0.15" fill="none" stroke="currentColor" stroke-width="0.06"/>
+        <path d="M0.6 1.2h0.8v0.6h-0.8z M1.4 1.35l0.25-0.15v0.6l-0.25-0.15z" fill="currentColor"/>
+      </svg>
+    {% endif %}
+    {% if movie.rating %}
+      <span class="label label--inverted movie__rating">{{ movie.rating }}</span>
+    {% endif %}
+  </div>
+{% endtemplate %}
+
+{% template movie_card %}
+  <div class="movie">
+    <div class="movie__title flex flex--row flex--center bg--gray-65">
+      <span class="title text--center text-stroke text-stroke--large" data-clamp="2">{{ movie.title }}</span>
+    </div>
+    {% render "poster", movie: movie %}
+    <div class="movie__cinemas flex flex--col gap--small" data-overflow="true" data-overflow-counter="true">
+      {% for cinema in movie.cinemas %}
+        <div class="item">
+          <div class="meta"></div>
+          <div class="content">
+            <span class="title title--small" data-clamp="1">{{ cinema.cinema }}</span>
+            <div class="flex flex--wrap gap--xsmall">
+              {% for screening in cinema.screenings %}
+                <span class="label label--outline movie__time">{{ screening.time }}{% for tag in screening.tags %} {{ tag }}{% endfor %}</span>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endtemplate %}
+
+{% template movie_row %}
+  <div class="movie-row flex flex--row flex--left flex--center-y">
+    {% render "poster", movie: movie %}
+    <div class="movie-row__text flex flex--col flex--left gap--xsmall">
+      <span class="title title--small" data-clamp="2">{{ movie.title }}</span>
+      {% for cinema in movie.cinemas limit: lines %}
+        <span class="description" data-clamp="1">{{ cinema.screenings.first.time }} {{ cinema.cinema }}</span>
+      {% endfor %}
+    </div>
+  </div>
+{% endtemplate %}
+
+{% template notice %}
+  <div class="flex flex--col flex--center gap--small h--full text--center">
+    {% if error != blank %}
+      <span class="title">No cinema programme</span>
+      <span class="description" data-clamp="4">{{ error }}</span>
+    {% else %}
+      <span class="title">No screenings</span>
+      <span class="description" data-clamp="3">cinema.de lists no more screenings for {{ city }} today or tomorrow.</span>
+    {% endif %}
+  </div>
+{% endtemplate %}
+
+{% template title_bar %}
+  <div class="title_bar">
+    <svg class="image-stroke" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16">
+      <path d="M6 3a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+      <path d="M9 6a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
+      <path d="M9 6h.5a2 2 0 0 1 1.983 1.738l3.11-1.382A1 1 0 0 1 16 7.269v7.462a1 1 0 0 1-1.406.913l-3.111-1.382A2 2 0 0 1 9.5 16H2a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"/>
+    </svg>
+    <span class="title">{% if day == "tomorrow" %}Tomorrow in Theaters{% else %}Now in Theaters{% endif %}</span>
+    <span class="instance">{{ city }}{% if error != blank and movies.size > 0 %} · offline since {{ updated_at }}{% endif %}</span>
+  </div>
+{% endtemplate %}
