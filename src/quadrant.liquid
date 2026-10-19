@@ -1,13 +1,10 @@
 <div class="layout layout--col layout--stretch">
   {% if movies.size > 0 %}
-    <div class="flex flex--col gap--small">
+    <div class="cinema-grid grid grid--cols-1 gap--small">
       {% for movie in movies limit: 4 %}
-        <div class="item{% if forloop.index > 3 %} movie--lg-only{% endif %}">
-          <div class="meta"></div>
-          <div class="content">
-            <span class="title title--small" data-clamp="1">{% if movie.rating %}{{ movie.rating }} · {% endif %}{{ movie.title }}</span>
-            <span class="description" data-clamp="1">{{ movie.cinemas.first.screenings.first.time }} {{ movie.cinemas.first.cinema }}</span>
-          </div>
+        <div class="quadrant-film{% if forloop.index > 3 %} movie--lg-only{% endif %}">
+          {% comment %} No "and N more": the label is taller than a line and would push out the only line that fits {% endcomment %}
+          {% render "movie_text", movie: movie, show_rating: true, no_counter: true %}
         </div>
       {% endfor %}
     </div>

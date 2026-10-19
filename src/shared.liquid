@@ -146,13 +146,60 @@
     white-space: nowrap;
   }
 
-  /* Compact rows of the half and quadrant views */
+  /* Compact rows of the half views: poster, then the film's text filling the rest of the row */
   .movie-row {
     min-height: 0;
+    align-items: stretch;
   }
 
   .movie-row .movie__poster {
     flex-shrink: 0;
+    align-self: center;
+  }
+
+  /* Title plus one line per cinema with all its showtimes; the lines take the height that is left
+     and end in "and N more". The wrapper gives the overflow engine that height as its budget. */
+  .movie-text {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 0;
+    gap: calc(4px * var(--ui-scale, 1));
+  }
+
+  .movie-text__title {
+    align-self: stretch;  /* data-clamp measures this width */
+  }
+
+  .movie-text__cinemas {
+    flex: 1 1 0;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .movie-text__cinemas .content {
+    min-width: 0;
+  }
+
+  .movie-text__line {
+    display: block;
+    align-self: stretch;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .movie-text__cinema {
+    font-weight: bold;
+  }
+
+  /* Quadrant: one block per film in equal rows, with a bar like the framework's items */
+  .quadrant-film {
+    display: flex;
+    min-height: 0;
+    padding-left: calc(10px * var(--ui-scale, 1));
+    border-left: calc(4px * var(--ui-scale, 1)) solid currentColor;
   }
 
   /* No room next to the poster in compact rows: keep the rating badge inside it */
@@ -161,17 +208,6 @@
     bottom: calc(4px * var(--ui-scale, 1));
     padding: calc(4px * var(--ui-scale, 1)) calc(6px * var(--ui-scale, 1));
     border-radius: calc(8px * var(--ui-scale, 1));
-  }
-
-  /* Takes the rest of the row. Its lines span its full width, because the framework's data-clamp
-     measures a flex item's own width: a line only as wide as its text gets trimmed by rounding */
-  .movie-row__text {
-    flex: 1 1 0;
-    min-width: 0;
-  }
-
-  .movie-row__text > span {
-    align-self: stretch;
   }
 
   /* Only --full-h follows the device, so the compact posters scale with --ui-scale like the text */
@@ -235,15 +271,28 @@
   </div>
 {% endtemplate %}
 
-{% template movie_row %}
-  <div class="movie-row flex flex--row flex--left flex--center-y{% if extra %} movie--lg-only{% endif %}">
-    {% render "poster", movie: movie %}
-    <div class="movie-row__text flex flex--col flex--left gap--xsmall">
-      <span class="title title--small" data-clamp="2">{{ movie.title }}</span>
-      {% for cinema in movie.cinemas limit: 3 %}
-        <span class="description{% if forloop.index > 2 %} movie--lg-only{% endif %}" data-clamp="1">{{ cinema.screenings.first.time }} {{ cinema.cinema }}</span>
-      {% endfor %}
+{% template movie_text %}
+  <div class="movie-text">
+    <span class="title title--small movie-text__title" data-clamp="2">{% if show_rating and movie.rating %}{{ movie.rating }} · {% endif %}{{ movie.title }}</span>
+    <div class="movie-text__cinemas">
+      <div class="flex flex--col gap--xsmall" data-overflow="true"{% unless no_counter %} data-overflow-counter="true"{% endunless %}>
+        {% for cinema in movie.cinemas %}
+          <div class="item">
+            <div class="content">
+              {% comment %} Times first: a long cinema name must not push them out of sight {% endcomment %}
+              <span class="description movie-text__line">{% for screening in cinema.screenings %}{{ screening.time }}{% for tag in screening.tags %} {{ tag }}{% endfor %}{% unless forloop.last %}, {% endunless %}{% endfor %} <span class="movie-text__cinema">{{ cinema.cinema }}</span></span>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
     </div>
+  </div>
+{% endtemplate %}
+
+{% template movie_row %}
+  <div class="movie-row flex flex--row flex--left{% if extra %} movie--lg-only{% endif %}">
+    {% render "poster", movie: movie %}
+    {% render "movie_text", movie: movie %}
   </div>
 {% endtemplate %}
 
