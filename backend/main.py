@@ -21,6 +21,7 @@ if __name__ == "__main__":
         exit(1)
 
     data = scrape_screenings(config["city"]["name"])
+    recently_watched_tmdb_ids = []
     if config["recentlyWatchedMovies"]["excludeWatchedMovies"]:
         recently_watched_tmdb_ids = fetch_recent_watches(
             config["recentlyWatchedMovies"]["letterboxdUsername"],
