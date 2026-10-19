@@ -34,8 +34,20 @@ jobs:
       - name: Unit tests
         run: python -m unittest discover -s tests -v
 
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: trmnlp test (every view on every TRMNL device)
+        run: docker run --rm -e CI=true -v "$PWD":/plugin "$TRMNLP_IMAGE" test --report report
+      - if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: trmnlp-report
+          path: report
+
   push:
-    needs: [lint, test]
+    needs: [lint, test, render]
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     steps:
