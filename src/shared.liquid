@@ -117,6 +117,21 @@
     height: calc(80px * var(--ui-scale, 1));
   }
 
+  /* The extra height goes to a larger poster; names and showtimes are a size up (lg: classes) */
+  .screen--lg:not(.screen--portrait) .view--full .movie__image {
+    height: calc(var(--full-h) * 0.36);
+  }
+
+  .screen--lg:not(.screen--portrait) .movie__time {
+    height: auto;
+  }
+
+  .screen--lg:not(.screen--portrait) .movie__cinemas .movie__cinema-name {
+    /* title--base is regular weight; keep the names as strong as on OG (4-bit screens weigh fonts by wght) */
+    font-weight: 700;
+    font-variation-settings: "wght" 700;
+  }
+
   .screen--lg.screen--portrait .view--full .movie__image {
     height: calc(var(--full-h) * 0.17);
   }
@@ -257,10 +272,10 @@
         <div class="item">
           <div class="meta"></div>
           <div class="content">
-            <span class="title title--small movie__cinema-name">{{ cinema.cinema }}</span>
+            <span class="title title--small lg:landscape:title--base movie__cinema-name">{{ cinema.cinema }}</span>
             <div class="flex flex--wrap gap--xsmall">
               {% for screening in cinema.screenings %}
-                <span class="label label--outline label--small movie__time">{{ screening.time }}{% for tag in screening.tags %} {{ tag }}{% endfor %}</span>
+                <span class="label label--outline label--small lg:landscape:label--base movie__time">{{ screening.time }}{% for tag in screening.tags %} {{ tag }}{% endfor %}</span>
               {% endfor %}
             </div>
           </div>
