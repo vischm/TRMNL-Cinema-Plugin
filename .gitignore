@@ -9,3 +9,4 @@ frontend/out/
 # trmnlp build / test --report output
 _build/
 report/
+trmnlp-test.log
