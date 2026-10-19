@@ -12,9 +12,13 @@ def fetch_recent_watches(username: str, number_of_days: int) -> list[int]:
 
     entries: list[int] = []
     for entry in feed.entries:
+        # TV shows logged on Letterboxd carry "tmdb_tvid" instead of "tmdb_movieid"; they can't be in cinemas
+        tmdb_movie_id = entry.get("tmdb_movieid")
+        if not tmdb_movie_id:
+            continue
         watched_date = entry.get("letterboxd_watcheddate")
         if is_less_than_n_days_ago(watched_date, n=number_of_days):
-            entries.append(int(entry.get("tmdb_movieid")))
+            entries.append(int(tmdb_movie_id))
     return entries
 
 def build_feed_url(username: str) -> str:
