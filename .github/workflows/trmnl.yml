@@ -41,8 +41,8 @@ jobs:
       - name: trmnlp test (every view on every TRMNL device)
         shell: bash
         run: docker run --rm -e CI=true -v "$PWD":/plugin "$TRMNLP_IMAGE" test --report report 2>&1 | tee trmnlp-test.log
-      - if: failure()
-        name: Annotate failures
+      - if: always()
+        name: Annotate failures and transform durations
         shell: bash
         run: |
           python3 - <<'EOF'
@@ -57,6 +57,10 @@ jobs:
               if example["status"] == "failed":
                   message = (example.get("message") or "").replace("%", "%25").replace("\n", "%0A")[:2000]
                   print("::error title=%s::%s" % (example["description"][:150], message))
+          durations = sorted(run["duration_ms"] for e in examples for run in e.get("runs") or [] if run.get("duration_ms"))
+          if durations:
+              print("::notice title=Transform durations::%d runs, median %d ms, max %d ms (TRMNL's limit is 5000 ms)"
+                    % (len(durations), durations[len(durations) // 2], durations[-1]))
           EOF
       - if: failure()
         uses: actions/upload-artifact@v7

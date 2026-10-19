@@ -73,12 +73,14 @@ def run(input):
     previous = trmnl.get("previous_merge_variables") or {}
     now = german_now()
     try:
-        return build_screen(fields, state, now, time.monotonic() + TIME_BUDGET_S)
+        result = build_screen(fields, state, now, time.monotonic() + TIME_BUDGET_S)
     except Exception as e:
         message = str(e) if isinstance(e, CinemaError) else "Something went wrong: %s" % type(e).__name__
         result = reuse_previous(previous, now) or {"city": fields.get("city", ""), "movies": []}
         result.update(error=message, trmnl_state=state)
-        return result
+    # Not shown on screen; makes the city TRMNL passed in visible in the plugin's logs
+    result["city_setting"] = str(fields.get("city", ""))
+    return result
 
 
 def build_screen(fields, state, now, deadline):
@@ -92,12 +94,12 @@ def build_screen(fields, state, now, deadline):
     watched_job = Background(fetch_recent_watches, username, now.date(), recent_days) if username else None
 
     day = "today"
-    city, films = fetch_programme(slug)
+    city, films = fetch_programme_by(deadline, slug)
     films = only_upcoming(only_cinemas(films, cinema_filter), now.strftime("%H:%M"))
     if not films:
         # Today's last screening has started: show tomorrow's programme instead
         day = "tomorrow"
-        city, films = fetch_programme(slug, now.date() + timedelta(days=1))
+        city, films = fetch_programme_by(deadline, slug, now.date() + timedelta(days=1))
         films = only_cinemas(films, cinema_filter)
 
     cache = load_cache(state)
@@ -106,7 +108,10 @@ def build_screen(fields, state, now, deadline):
     stale = [t for t in by_popularity if t not in cache or today - cache[t][3] > CACHE_MAX_AGE_DAYS]
     cache.update(look_up_films(stale, deadline, today))
 
-    watched = (watched_job.result(deadline) if watched_job else None) or set()
+    try:
+        watched = watched_job.result(deadline) if watched_job else set()
+    except Exception:  # the programme is still worth showing without the Letterboxd diary
+        watched = set()
     ranked = rank(films, cache, watched)
     top = ranked[:MAX_MOVIES]
     # Posters of films outside the top are dropped from the cache when it runs full
@@ -218,20 +223,24 @@ class Background:
     """Runs one call on a daemon thread while the run goes on."""
 
     def __init__(self, function, *args):
-        self._value = None
+        self._value = self._error = None
         self._thread = threading.Thread(target=self._run, args=(function, args), daemon=True)
         self._thread.start()
 
     def _run(self, function, args):
         try:
             self._value = function(*args)
-        except Exception:
-            pass
+        except Exception as e:
+            self._error = e
 
     def result(self, deadline):
-        """The call's result, or None if it failed or is still running at the deadline."""
+        """The call's result. Raises its exception, or TimeoutError if it is still running at the deadline."""
         self._thread.join(max(0, deadline - time.monotonic()))
-        return None if self._thread.is_alive() else self._value
+        if self._thread.is_alive():
+            raise TimeoutError()
+        if self._error:
+            raise self._error
+        return self._value
 
 
 # One connection pool for all lookups, so a run needs a TLS handshake per worker instead of per film
@@ -241,6 +250,14 @@ SESSION.mount("https://", requests.adapters.HTTPAdapter(pool_maxsize=LOOKUP_WORK
 
 def http_get(url, params=None):
     return SESSION.get(url, params=params, headers=HEADERS, timeout=REQUEST_TIMEOUT)
+
+
+def fetch_programme_by(deadline, slug, day=None):
+    """fetch_programme, but never waiting past the deadline: requests' timeouts only bound each step."""
+    try:
+        return Background(fetch_programme, slug, day).result(deadline)
+    except TimeoutError:
+        raise CinemaError("cinema.de is not reachable right now.")
 
 
 def fetch_programme(slug, day=None):

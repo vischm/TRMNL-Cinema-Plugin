@@ -211,8 +211,10 @@ class ParallelTest(unittest.TestCase):
 
     def test_background_result(self):
         self.assertEqual(transform.Background(lambda: 42).result(time.monotonic() + 1), 42)
-        self.assertIsNone(transform.Background(lambda: 1 / 0).result(time.monotonic() + 1))
-        self.assertIsNone(transform.Background(time.sleep, 2).result(time.monotonic() + 0.1))
+        with self.assertRaises(ZeroDivisionError):
+            transform.Background(lambda: 1 / 0).result(time.monotonic() + 1)
+        with self.assertRaises(TimeoutError):
+            transform.Background(time.sleep, 2).result(time.monotonic() + 0.1)
 
 
 class RankAndStateTest(unittest.TestCase):
@@ -280,6 +282,21 @@ class RunTest(unittest.TestCase):
         self.assertEqual(len(result["movies"]), 3)
         self.assertIsNone(result["movies"][0]["rating"])
         self.assertNotIn("Whalefall", [m["title"] for m in result["movies"]])  # only 3 screenings
+
+    def test_slow_cinema_de_ends_the_run_at_the_deadline(self):
+        def slow(url, params=None):
+            time.sleep(2)
+            raise requests.ConnectionError("too late")
+
+        started = time.monotonic()
+        with mock.patch.object(transform, "TIME_BUDGET_S", 0.3):
+            result = run_plugin(slow)
+        self.assertLess(time.monotonic() - started, 1.0)
+        self.assertEqual(result["error"], "cinema.de is not reachable right now.")
+
+    def test_reports_the_city_setting_it_received(self):
+        self.assertEqual(run_plugin(FakeWeb(), {"city": "Leipzig"})["city_setting"], "Leipzig")
+        self.assertEqual(run_plugin(FakeWeb(), {"city": ""})["city_setting"], "")
 
     def test_unknown_city(self):
         result = run_plugin(FakeWeb(cinema_status=404), {"city": "Gibtsnicht"})
