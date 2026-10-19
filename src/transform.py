@@ -78,9 +78,9 @@ def run(input):
         message = str(e) if isinstance(e, CinemaError) else "Something went wrong: %s" % type(e).__name__
         result = reuse_previous(previous, now) or {"city": fields.get("city", ""), "movies": []}
         result.update(error=message, trmnl_state=state)
-    # Not shown on screen; makes the city TRMNL passed in visible in the plugin's logs, which keep
-    # only the start of the output, so it goes first
-    return {"city_setting": str(fields.get("city", "")), **result}
+    # city_setting isn't shown on screen; it makes the city TRMNL passed in visible in the plugin's logs,
+    # which keep only the start of the output, so it goes first
+    return {"city_setting": str(fields.get("city", "")), "today": now.date().isoformat(), **result}
 
 
 def build_screen(fields, state, now, deadline):

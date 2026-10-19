@@ -58,6 +58,15 @@ RSpec.describe 'Cinema' do
     expect(run.data['movies'].size).to eq(3)
   end
 
+  it "fits the date next to tomorrow's title in portrait" do
+    over = programme.gsub(/(cinde-tag[^>]*>\s*)\d\d:\d\d/, '\100:00') # today's showtimes are all over
+    cinema = { 'https://www.cinema.de/kino/kinoprogramm/*' => [{ body: over }, { body: programme }] }
+    screen = trmnl.render(view: 'full', device: 'og_plus', orientation: :portrait, custom_fields:,
+                          mocks: mocks.merge(cinema))
+    expect(screen).to have_text('Tomorrow in Theaters')
+    expect(screen).to have_no_overlapping_text
+  end
+
   it 'explains an unknown city' do
     screen = trmnl.render(view: 'full', device: 'og_plus', custom_fields: { city: 'Gibtsnicht' },
                           mocks: { 'https://www.cinema.de/*' => { status: 404, body: 'not found' } })

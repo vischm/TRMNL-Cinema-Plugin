@@ -3,6 +3,7 @@
   .cinema-grid {
     height: 100%;
     min-height: 0;
+    grid-auto-rows: minmax(0, 1fr);  /* equal rows, so a long cinema list overflows into "and N more" */
   }
 
   .movie {
@@ -92,6 +93,23 @@
     height: calc(var(--full-h) * 0.22);
   }
 
+  .title_bar__date {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  /* Portrait title bars are too narrow for an exact centre next to "Tomorrow in Theaters":
+     centre the date between title and city instead */
+  .screen--portrait .title_bar__date {
+    position: static;
+    transform: none;
+    flex: 1 1 0;
+    min-width: 0;
+    text-align: center;
+    white-space: nowrap;
+  }
+
   /* Compact rows of the half and quadrant views */
   .movie-row {
     min-height: 0;
@@ -160,7 +178,9 @@
       <span class="content content--large text--center text-stroke text-stroke--large" data-clamp="2">{{ movie.title }}</span>
     </div>
     {% render "poster", movie: movie %}
-    <div class="movie__cinemas flex flex--col gap--small" data-overflow="true" data-overflow-counter="true">
+    {% comment %} The overflow engine budgets the list by its parent's height: this wrapper is the space left {% endcomment %}
+    <div class="movie__cinemas">
+    <div class="flex flex--col gap--small" data-overflow="true" data-overflow-counter="true">
       {% for cinema in movie.cinemas %}
         <div class="item">
           <div class="meta"></div>
@@ -174,6 +194,7 @@
           </div>
         </div>
       {% endfor %}
+    </div>
     </div>
   </div>
 {% endtemplate %}
@@ -210,6 +231,9 @@
       <path d="M9 6h.5a2 2 0 0 1 1.983 1.738l3.11-1.382A1 1 0 0 1 16 7.269v7.462a1 1 0 0 1-1.406.913l-3.111-1.382A2 2 0 0 1 9.5 16H2a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"/>
     </svg>
     <span class="title">{% if day == "tomorrow" %}Tomorrow in Theaters{% else %}Now in Theaters{% endif %}</span>
+    {% if show_date and today %}
+      <span class="instance title_bar__date">{{ today | l_date: "%a, %-d %b", locale }}</span>
+    {% endif %}
     <span class="instance">{{ city }}{% if error != blank and movies.size > 0 %} · offline since {{ updated_at }}{% endif %}</span>
   </div>
 {% endtemplate %}

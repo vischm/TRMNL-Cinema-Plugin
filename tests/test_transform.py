@@ -300,7 +300,7 @@ class RunTest(unittest.TestCase):
     def test_shows_tomorrow_after_the_last_screening(self):
         web = FakeWeb()
         result = run_plugin(web, now=datetime(2026, 10, 19, 23, 30))
-        self.assertEqual((result["day"], result["date"]), ("tomorrow", "2026-10-20"))
+        self.assertEqual((result["day"], result["date"], result["today"]), ("tomorrow", "2026-10-20", "2026-10-19"))
         self.assertEqual(web.calls[1][1], {"day": "2026-10-20"})
         self.assertTrue(result["movies"])
 
@@ -334,6 +334,7 @@ class RunTest(unittest.TestCase):
     def test_missing_city(self):
         result = run_plugin(FakeWeb(), {"city": ""})
         self.assertEqual(result["error"], "Set your city in the plugin settings.")
+        self.assertEqual(result["today"], "2026-10-19")
 
     def test_outage_keeps_previous_screen_and_state(self):
         previous = run_plugin(FakeWeb())
