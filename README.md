@@ -89,7 +89,7 @@ Pushes to `main` deploy automatically. The workflow needs the repository secret 
 
 ## Third-Party Assets
 
-This project uses the **"theaters" icon from Material Symbols** ([assets/theaters.svg](assets/theaters.svg), also inlined in the title bar)  
+This project uses the **"theaters" icon from Material Symbols**: in TRMNL's orange as the plugin icon ([assets/theaters.svg](assets/theaters.svg), [assets/theaters.png](assets/theaters.png)) and inlined in the title bar  
 © Google  
 Licensed under the Apache License 2.0  
 https://fonts.google.com/icons
