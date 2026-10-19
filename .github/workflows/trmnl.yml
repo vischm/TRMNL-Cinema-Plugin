@@ -57,10 +57,15 @@ jobs:
               if example["status"] == "failed":
                   message = (example.get("message") or "").replace("%", "%25").replace("\n", "%0A")[:2000]
                   print("::error title=%s::%s" % (example["description"][:150], message))
-          durations = sorted(run["duration_ms"] for e in examples for run in e.get("runs") or [] if run.get("duration_ms"))
-          if durations:
-              print("::notice title=Transform durations::%d runs, median %d ms, max %d ms (TRMNL's limit is 5000 ms)"
-                    % (len(durations), durations[len(durations) // 2], durations[-1]))
+          runs = sorted(((run["duration_ms"], example["description"], run.get("requests") or [])
+                         for example in examples for run in example.get("runs") or [] if run.get("duration_ms")),
+                        key=lambda r: r[0])
+          if runs:
+              slowest = "%0A".join("%d ms, %d requests (%d aborted): %s" % (ms, len(requests),
+                                   sum(1 for r in requests if r.get("aborted")), description[-80:])
+                                   for ms, description, requests in runs[-5:])
+              print("::notice title=Transform durations::%d runs, median %d ms, max %d ms (TRMNL's limit is 5000 ms)%%0A%s"
+                    % (len(runs), runs[len(runs) // 2][0], runs[-1][0], slowest))
           EOF
       - if: failure()
         uses: actions/upload-artifact@v7
