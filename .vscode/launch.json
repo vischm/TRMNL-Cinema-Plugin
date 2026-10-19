@@ -5,7 +5,7 @@
             "name": "Transform (live data)",
             "type": "debugpy",
             "request": "launch",
-            "program": "${workspaceFolder}/src/transform.py",
+            "program": "${workspaceFolder}/bin/run_transform.py",
             "args": ["Leipzig"],
             "console": "integratedTerminal",
             "justMyCode": true

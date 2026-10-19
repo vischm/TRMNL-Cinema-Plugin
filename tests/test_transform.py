@@ -85,6 +85,12 @@ def run_plugin(web, fields=None, state=None, previous=None, now=FIXTURE_DAY):
         return transform.run(input)
 
 
+class ScriptTest(unittest.TestCase):
+    def test_has_no_main_block(self):
+        # TRMNL's runtime executes transform.py as a script: a __main__ block would run on every refresh
+        self.assertNotIn("__main__", Path(transform.__file__).read_text(encoding="utf-8"))
+
+
 class GermanNowTest(unittest.TestCase):
     def test_winter_and_summer_offsets(self):
         self.assertEqual(transform.german_now(datetime(2026, 1, 15, 12, 0, tzinfo=timezone.utc)), datetime(2026, 1, 15, 13, 0))

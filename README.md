@@ -54,6 +54,7 @@ cinema/
 │   └── launch.json              # Debug the transform with live data, or the unit tests
 ├── assets/                      # Plugin icon for the TRMNL website (upload by hand)
 ├── bin/
+│   ├── run_transform.py         # Runs the transform locally with live data
 │   └── trmnlp                   # Runs the trmnlp CLI in Docker
 ├── src/                         # The plugin as TRMNL stores it
 │   ├── settings.yml             # Plugin settings and custom fields
@@ -81,9 +82,11 @@ cinema/
 ### Run the transform locally
 
 ```bash
-python src/transform.py Leipzig                   # prints what the views get, with live data
-python src/transform.py Berlin your_letterboxd    # with a Letterboxd username
+python bin/run_transform.py Leipzig                   # prints what the views get, with live data
+python bin/run_transform.py Berlin your_letterboxd    # with a Letterboxd username
 ```
+
+Keep `src/transform.py` free of an `if __name__ == "__main__":` block: TRMNL's runtime runs that file as a script, so such a block would run on every refresh.
 
 In VS Code, the **Transform (live data)** and **Unit tests** launch configurations run the same under the debugger.
 
