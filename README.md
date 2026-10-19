@@ -89,10 +89,10 @@ Pushes to `main` deploy automatically. The workflow needs the repository secret 
 
 ## Third-Party Assets
 
-This project uses **Bootstrap Icons**  
-© The Bootstrap Authors  
-Licensed under the MIT License  
-https://icons.getbootstrap.com/
+This project uses the **"theaters" icon from Material Symbols** ([assets/theaters.svg](assets/theaters.svg), also inlined in the title bar)  
+© Google  
+Licensed under the Apache License 2.0  
+https://fonts.google.com/icons
 
 Programme data comes from [cinema.de](https://www.cinema.de/), ratings and posters from [Letterboxd](https://letterboxd.com/).
 
