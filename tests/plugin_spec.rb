@@ -49,6 +49,14 @@ RSpec.describe 'Cinema' do
     expect(screen).to have_text('Now in Theaters').and have_text('Leipzig').and have_text('3.9')
   end
 
+  it 'stays within the limits when Letterboxd is slow' do
+    slow = mocks.merge('https://api.letterboxd.com/api/v0/search*' => { json: { items: [{ score: 1, film: }] }, delay: 2 })
+    run = trmnl.transform(mocks: slow, custom_fields:, now:)
+    expect(run).to stay_within_serverless_limits
+    expect(run.error).to be_nil
+    expect(run.data['movies'].size).to eq(3)
+  end
+
   it 'explains an unknown city' do
     screen = trmnl.render(view: 'full', device: 'og_plus', now:, custom_fields: { city: 'Gibtsnicht' },
                           mocks: { 'https://www.cinema.de/*' => { status: 404, body: 'not found' } })

@@ -11,10 +11,11 @@ Letterboxd results are cached in TRMNL's Saved State (8 KB per install), so a ru
 only looks up films that are new in the programme.
 """
 import json
+import queue
 import re
+import threading
 import time
 import xml.etree.ElementTree as ET
-from concurrent.futures import ThreadPoolExecutor, wait
 from datetime import date, datetime, timedelta, timezone
 from datetime import time as clock
 from html.parser import HTMLParser
@@ -88,37 +89,29 @@ def build_screen(fields, state, now, deadline):
     recent_days = to_int(fields.get("recent_days"), DEFAULT_RECENT_DAYS)
     cinema_filter = [part.strip().lower() for part in str(fields.get("cinemas") or "").split(",") if part.strip()]
 
-    pool = ThreadPoolExecutor(max_workers=LOOKUP_WORKERS)
-    try:
-        watched_job = pool.submit(fetch_recent_watches, username, now.date(), recent_days) if username else None
+    watched_job = Background(fetch_recent_watches, username, now.date(), recent_days) if username else None
 
-        day = "today"
-        city, films = fetch_programme(slug)
-        films = only_upcoming(only_cinemas(films, cinema_filter), now.strftime("%H:%M"))
-        if not films:
-            # Today's last screening has started: show tomorrow's programme instead
-            day = "tomorrow"
-            city, films = fetch_programme(slug, now.date() + timedelta(days=1))
-            films = only_cinemas(films, cinema_filter)
+    day = "today"
+    city, films = fetch_programme(slug)
+    films = only_upcoming(only_cinemas(films, cinema_filter), now.strftime("%H:%M"))
+    if not films:
+        # Today's last screening has started: show tomorrow's programme instead
+        day = "tomorrow"
+        city, films = fetch_programme(slug, now.date() + timedelta(days=1))
+        films = only_cinemas(films, cinema_filter)
 
-        cache = load_cache(state)
-        today = now.date().toordinal()
-        by_popularity = sorted(films, key=lambda title: -screening_count(films[title]))
-        stale = [t for t in by_popularity if t not in cache or today - cache[t][3] > CACHE_MAX_AGE_DAYS]
-        cache.update(look_up_films(pool, stale, deadline, today))
+    cache = load_cache(state)
+    today = now.date().toordinal()
+    by_popularity = sorted(films, key=lambda title: -screening_count(films[title]))
+    stale = [t for t in by_popularity if t not in cache or today - cache[t][3] > CACHE_MAX_AGE_DAYS]
+    cache.update(look_up_films(stale, deadline, today))
 
-        watched = set()
-        if watched_job:
-            done, _ = wait([watched_job], timeout=max(0, deadline - time.monotonic()))
-            watched = watched_job.result() if done and not watched_job.exception() else set()
-
-        ranked = rank(films, cache, watched)
-        top = ranked[:MAX_MOVIES]
-        # Posters of films outside the top are dropped from the cache when it runs full
-        missing_posters = [t for t in top if cache.get(t) and cache[t][0] is not None and not cache[t][2]]
-        cache.update(look_up_films(pool, missing_posters, deadline, today))
-    finally:
-        pool.shutdown(wait=False, cancel_futures=True)
+    watched = (watched_job.result(deadline) if watched_job else None) or set()
+    ranked = rank(films, cache, watched)
+    top = ranked[:MAX_MOVIES]
+    # Posters of films outside the top are dropped from the cache when it runs full
+    missing_posters = [t for t in top if cache.get(t) and cache[t][0] is not None and not cache[t][2]]
+    cache.update(look_up_films(missing_posters, deadline, today))
 
     return {
         "city": city,
@@ -183,6 +176,63 @@ def to_int(value, default):
 # ---------------------------------------------------------------------------
 # cinema.de
 # ---------------------------------------------------------------------------
+
+# Work runs on daemon threads instead of a ThreadPoolExecutor: Python waits for an executor's
+# threads when it exits, so a request still running at the deadline would keep the run alive
+# past TRMNL's time limit.
+
+def run_parallel(function, items, deadline):
+    """Call function(item) for each item, LOOKUP_WORKERS at a time, until the deadline.
+
+    Returns {item: result} for the calls that finished without raising.
+    """
+    work = queue.Queue()
+    for item in items:
+        work.put(item)
+    results = {}
+    lock = threading.Lock()
+
+    def worker():
+        while time.monotonic() < deadline:
+            try:
+                item = work.get_nowait()
+            except queue.Empty:
+                return
+            try:
+                result = function(item)
+            except Exception:
+                continue
+            with lock:
+                results[item] = result
+
+    threads = [threading.Thread(target=worker, daemon=True) for _ in range(min(LOOKUP_WORKERS, len(items)))]
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join(max(0, deadline - time.monotonic()))
+    with lock:
+        return dict(results)
+
+
+class Background:
+    """Runs one call on a daemon thread while the run goes on."""
+
+    def __init__(self, function, *args):
+        self._value = None
+        self._thread = threading.Thread(target=self._run, args=(function, args), daemon=True)
+        self._thread.start()
+
+    def _run(self, function, args):
+        try:
+            self._value = function(*args)
+        except Exception:
+            pass
+
+    def result(self, deadline):
+        """The call's result, or None if it failed or is still running at the deadline."""
+        self._thread.join(max(0, deadline - time.monotonic()))
+        return None if self._thread.is_alive() else self._value
+
 
 # One connection pool for all lookups, so a run needs a TLS handshake per worker instead of per film
 SESSION = requests.Session()
@@ -347,27 +397,21 @@ def screening_count(cinemas):
 # Letterboxd
 # ---------------------------------------------------------------------------
 
-def look_up_films(pool, titles, deadline, today):
+def look_up_films(titles, deadline, today):
     """Search Letterboxd for several films in parallel until the deadline.
 
     Returns {title: [rating, tmdb_id, poster_url, day]} for every lookup that finished;
     films Letterboxd doesn't know are cached as [None, None, None, day] too.
     """
-    if not titles or time.monotonic() >= deadline:
-        return {}
-    jobs = {pool.submit(search_letterboxd, title): title for title in titles}
-    done, _ = wait(jobs, timeout=max(0, deadline - time.monotonic()))
-    results = {}
-    for job in done:
-        if job.exception() is None:
-            film = job.result()
-            results[jobs[job]] = [
-                round(film["rating"], 2) if film.get("rating") is not None else None,
-                film.get("tmdb_id"),
-                film.get("poster_url"),
-                today,
-            ] if film else [None, None, None, today]
-    return results
+    return {
+        title: [
+            round(film["rating"], 2) if film.get("rating") is not None else None,
+            film.get("tmdb_id"),
+            film.get("poster_url"),
+            today,
+        ] if film else [None, None, None, today]
+        for title, film in run_parallel(search_letterboxd, titles, deadline).items()
+    }
 
 
 def search_letterboxd(title):

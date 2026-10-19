@@ -2,6 +2,7 @@
 import gzip
 import json
 import sys
+import time
 import unittest
 from datetime import date, datetime, timezone
 from pathlib import Path
@@ -193,6 +194,25 @@ class LetterboxdTest(unittest.TestCase):
         feed = rss(("2026-10-01", "movieId", 101), ("2025-01-01", "movieId", 102),
                    ("2026-10-10", "tvId", 103), (None, "movieId", 104))
         self.assertEqual(transform.parse_recent_watches(feed, date(2026, 10, 19), 180), {101})
+
+
+class ParallelTest(unittest.TestCase):
+    def test_returns_at_the_deadline_without_waiting_for_slow_or_failing_calls(self):
+        def call(item):
+            if item == "failing":
+                raise ValueError(item)
+            time.sleep(2 if item == "slow" else 0)
+            return item.upper()
+
+        started = time.monotonic()
+        results = transform.run_parallel(call, ["a", "slow", "failing", "b"], started + 0.3)
+        self.assertLess(time.monotonic() - started, 1.0)
+        self.assertEqual(results, {"a": "A", "b": "B"})
+
+    def test_background_result(self):
+        self.assertEqual(transform.Background(lambda: 42).result(time.monotonic() + 1), 42)
+        self.assertIsNone(transform.Background(lambda: 1 / 0).result(time.monotonic() + 1))
+        self.assertIsNone(transform.Background(time.sleep, 2).result(time.monotonic() + 0.1))
 
 
 class RankAndStateTest(unittest.TestCase):
