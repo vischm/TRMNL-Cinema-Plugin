@@ -39,28 +39,50 @@ custom_fields:
   description: Your city in Germany as cinema.de names it, e.g. Leipzig, München or Frankfurt am Main. If it isn't found, paste the cinema.de programme URL of your city instead.
   placeholder: Berlin
   default: Berlin
-- keyname: letterboxd_username
-  field_type: string
-  name: Letterboxd Username
-  description: Optional. Films you logged on Letterboxd recently are hidden.
-  optional: true
-- keyname: recent_days
-  field_type: number
-  name: Hide Films Watched Within (Days)
-  description: How far back your Letterboxd diary counts as recently watched.
-  default: 180
-  min: 1
-  max: 3650
-  optional: true
 - keyname: preferred_cinemas
   field_type: multi_string
   name: Preferred Cinemas
-  description: Optional. These cinemas are listed first under each film, in this order. Part of the name is enough, e.g. Schauburg.
+  description: Listed first under each film, in this order. Part of the name is enough, e.g. Schauburg.
   placeholder: Schauburg
   optional: true
+  group: Cinemas
 - keyname: excluded_cinemas
   field_type: multi_string
   name: Excluded Cinemas
-  description: Optional. Screenings at these cinemas are hidden. Part of the name is enough, e.g. Sommerkino.
+  description: Screenings at these cinemas are hidden. Part of the name is enough, e.g. Sommerkino.
   placeholder: Sommerkino
   optional: true
+  group: Cinemas
+- keyname: hide_watched
+  field_type: boolean
+  name: Hide Films I've Watched
+  description: Hides films you logged in your Letterboxd diary.
+  default: false
+  optional: true
+  group: Letterboxd
+  conditional_validation:
+  - when: "true"
+    visible:
+    - letterboxd_username
+    - recent_days
+    required:
+    - letterboxd_username
+- keyname: letterboxd_username
+  field_type: string
+  name: Letterboxd Username
+  description: Your username or profile URL, e.g. letterboxd.com/yourname.
+  placeholder: yourname
+  optional: true
+  group: Letterboxd
+- keyname: recent_days
+  field_type: select
+  name: Remember Watched Films For
+  description: How long a film you watched stays hidden. Letterboxd's feed covers your last 50 diary entries.
+  options:
+  - "1 month": 30
+  - "3 months": 90
+  - "6 months": 180
+  - "1 year": 365
+  default: 180
+  optional: true
+  group: Letterboxd

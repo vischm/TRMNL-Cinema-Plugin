@@ -10,6 +10,7 @@ time_zone: Europe/Berlin
 # values of custom fields (defined in src/settings.yml)
 custom_fields:
   city: Leipzig
+  hide_watched: "true"
   letterboxd_username: "{{ env.LETTERBOXD_USERNAME }}"
   recent_days: 180
   preferred_cinemas: ""

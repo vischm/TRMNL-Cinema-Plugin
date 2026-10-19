@@ -114,6 +114,12 @@ class InputTest(unittest.TestCase):
         for city, slug in cases.items():
             self.assertEqual(transform.city_slug(city), slug, city)
 
+    def test_to_bool(self):
+        self.assertTrue(transform.to_bool("true"))
+        self.assertFalse(transform.to_bool("false", default=True))
+        self.assertTrue(transform.to_bool(None, default=True))
+        self.assertFalse(transform.to_bool("", default=False))
+
     def test_letterboxd_username(self):
         for value in ("someone", "@someone", "https://letterboxd.com/someone/", " someone "):
             self.assertEqual(transform.letterboxd_username(value), "someone", value)
@@ -269,7 +275,7 @@ class RankAndStateTest(unittest.TestCase):
 class RunTest(unittest.TestCase):
     def test_ranks_films_and_hides_watched(self):
         web = FakeWeb(watched_rss=rss(("2026-10-01", "movieId", tmdb_id("Whalefall"))))
-        result = run_plugin(web, {"letterboxd_username": "someone"})
+        result = run_plugin(web, {"hide_watched": "true", "letterboxd_username": "someone"})
         self.assertEqual(result["error"], "")
         self.assertEqual((result["city"], result["day"], result["date"]), ("Leipzig", "today", "2026-10-19"))
         self.assertEqual([m["title"] for m in result["movies"]],
@@ -288,6 +294,16 @@ class RunTest(unittest.TestCase):
         sense = next(m for m in result["movies"] if m["title"] == "Sinn und Sinnlichkeit")
         self.assertEqual([c["cinema"] for c in sense["cinemas"]], ["Passage Kinos", "Regina-Palast"])
         result = run_plugin(FakeWeb(), {"excluded_cinemas": "Regina, Passage"})
+        self.assertNotIn("Sinn und Sinnlichkeit", [m["title"] for m in result["movies"]])
+
+    def test_watched_films_only_hidden_when_switched_on(self):
+        feed = rss(("2026-10-01", "movieId", tmdb_id("Sinn und Sinnlichkeit")))
+        web = FakeWeb(watched_rss=feed)
+        result = run_plugin(web, {"hide_watched": "false", "letterboxd_username": "someone"})
+        self.assertIn("Sinn und Sinnlichkeit", [m["title"] for m in result["movies"]])
+        self.assertFalse([url for url, _ in web.calls if url.endswith("/rss/")])
+        # Installs from before the switch existed: a username alone still hides watched films
+        result = run_plugin(FakeWeb(watched_rss=feed), {"letterboxd_username": "someone"})
         self.assertNotIn("Sinn und Sinnlichkeit", [m["title"] for m in result["movies"]])
 
     def test_second_run_uses_the_cache(self):

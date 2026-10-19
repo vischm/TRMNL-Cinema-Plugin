@@ -88,11 +88,13 @@ def build_screen(fields, state, now, deadline):
     if not slug:
         raise CinemaError("Set your city in the plugin settings.")
     username = letterboxd_username(fields.get("letterboxd_username", ""))
+    # Installs from before the "Hide Films I've Watched" switch only have a username
+    hide_watched = to_bool(fields.get("hide_watched"), default=bool(username))
     recent_days = to_int(fields.get("recent_days"), DEFAULT_RECENT_DAYS)
     preferred = cinema_names(fields.get("preferred_cinemas"))
     excluded = cinema_names(fields.get("excluded_cinemas"))
 
-    watched_job = Background(fetch_recent_watches, username, now.date(), recent_days) if username else None
+    watched_job = Background(fetch_recent_watches, username, now.date(), recent_days) if username and hide_watched else None
 
     day = "today"
     city, films = fetch_programme_by(deadline, slug)
@@ -176,6 +178,13 @@ def cinema_names(value):
     """Lower-cased parts of cinema names from a multi_string field, which arrives as "Schauburg,Passage"."""
     parts = value if isinstance(value, list) else str(value or "").replace("\n", ",").split(",")
     return [str(part).strip().lower() for part in parts if str(part).strip()]
+
+
+def to_bool(value, default=False):
+    """A boolean field, which TRMNL saves as "true" or "false"."""
+    if value is None or str(value).strip() == "":
+        return default
+    return str(value).strip().lower() in ("true", "1", "yes", "on")
 
 
 def to_int(value, default):

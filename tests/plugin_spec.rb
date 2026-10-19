@@ -35,7 +35,7 @@ RSpec.describe 'Cinema' do
     }
   end
 
-  let(:custom_fields) { { city: 'Leipzig', letterboxd_username: 'someone' } }
+  let(:custom_fields) { { city: 'Leipzig', hide_watched: 'true', letterboxd_username: 'someone' } }
 
   # No `now:` on purpose: a frozen clock (libfaketime) made every transform run several seconds slower on
   # GitHub's runners. The tests don't need one: once the saved programme's showtimes have passed, the
