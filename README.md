@@ -77,7 +77,7 @@ bin/trmnlp test --report report        # renders all views on all devices; open 
 
 ### Constraints of TRMNL's serverless runtime
 
-- 5 seconds and 128 MB per run. The transform stops looking up films after 3 seconds and continues on the next refresh.
+- 5 seconds and 128 MB per run. The transform stops looking up films after 2.5 seconds and continues on the next refresh.
 - Only `requests` and the Python standard library are available: HTML is parsed with `html.parser`, RSS with `xml.etree`.
 - There is no time zone database, so German time is computed in `german_now()`.
 - Saved State holds at most 8 KB. `build_state()` trims the rating cache to fit.

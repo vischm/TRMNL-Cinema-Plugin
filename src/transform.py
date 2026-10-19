@@ -27,7 +27,7 @@ LETTERBOXD_SEARCH_URL = "https://api.letterboxd.com/api/v0/search"
 LETTERBOXD_RSS_URL = "https://letterboxd.com/{username}/rss/"
 HEADERS = {"User-Agent": "Mozilla/5.0"}
 
-TIME_BUDGET_S = 3.0       # TRMNL stops a run after 5 s, Python's start-up included
+TIME_BUDGET_S = 2.5       # TRMNL stops a run after 5 s, Python's start-up included
 REQUEST_TIMEOUT = (2, 3)  # seconds to connect, seconds between received bytes
 LOOKUP_WORKERS = 10
 MAX_MOVIES = 3
