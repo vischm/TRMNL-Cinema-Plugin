@@ -30,6 +30,7 @@ TIME_BUDGET_S = 4.0       # TRMNL stops a run after 5 s
 REQUEST_TIMEOUT = (2, 3)  # seconds to connect, seconds between received bytes
 LOOKUP_WORKERS = 10
 MAX_MOVIES = 3
+POSTER_MIN_WIDTH = 300
 DEFAULT_RECENT_DAYS = 180
 CACHE_MAX_AGE_DAYS = 3    # ratings of new releases still move, so refresh them now and then
 STATE_LIMIT_BYTES = 7500  # Saved State holds at most 8192 bytes
@@ -384,10 +385,15 @@ def select_search_result(response):
 
 
 def extract_poster_url(film):
+    """Smallest poster that is still sharp on TRMNL X."""
     try:
-        return film["poster"]["sizes"][0]["url"]
-    except (KeyError, IndexError, TypeError):
+        sizes = sorted(film["poster"]["sizes"], key=lambda size: size.get("width") or 0)
+    except (KeyError, TypeError, AttributeError):
         return None
+    for size in sizes:
+        if (size.get("width") or 0) >= POSTER_MIN_WIDTH:
+            return size.get("url")
+    return sizes[-1].get("url") if sizes else None
 
 
 def extract_tmdb_id(film):

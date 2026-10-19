@@ -182,6 +182,13 @@ class LetterboxdTest(unittest.TestCase):
         self.assertIsNone(transform.select_search_result({"items": []}))
         self.assertIsNone(transform.select_search_result({"items": [{"score": 3}]}))
 
+    def test_extract_poster_url_picks_the_smallest_sharp_size(self):
+        sizes = [{"width": w, "height": w * 3 // 2, "url": "poster-%d" % w} for w in (2000, 150, 460, 300)]
+        self.assertEqual(transform.extract_poster_url({"poster": {"sizes": sizes}}), "poster-300")
+        self.assertEqual(transform.extract_poster_url({"poster": {"sizes": sizes[1:2]}}), "poster-150")
+        self.assertIsNone(transform.extract_poster_url({"poster": None}))
+        self.assertIsNone(transform.extract_poster_url({}))
+
     def test_parse_recent_watches_ignores_tv_and_old_entries(self):
         feed = rss(("2026-10-01", "movieId", 101), ("2025-01-01", "movieId", 102),
                    ("2026-10-10", "tvId", 103), (None, "movieId", 104))
