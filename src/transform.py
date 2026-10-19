@@ -570,3 +570,15 @@ def build_state(cache, programme, top):
             break
         del films[title]
     return {"v": STATE_VERSION, "films": films}
+
+
+if __name__ == "__main__":
+    # Local run with live data (TRMNL only calls run()): python src/transform.py [city] [letterboxd username]
+    import sys
+
+    settings = {"city": sys.argv[1] if len(sys.argv) > 1 else "Leipzig"}
+    if len(sys.argv) > 2:
+        settings["letterboxd_username"] = sys.argv[2]
+    output = run({"trmnl": {"plugin_settings": {"custom_fields_values": settings}}})
+    output.pop("trmnl_state")
+    print(json.dumps(output, indent=2, ensure_ascii=False))

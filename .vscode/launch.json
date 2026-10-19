@@ -2,32 +2,23 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Backend",
+            "name": "Transform (live data)",
             "type": "debugpy",
             "request": "launch",
-            "program": "${workspaceFolder}/backend/main.py",
+            "program": "${workspaceFolder}/src/transform.py",
+            "args": ["Leipzig"],
             "console": "integratedTerminal",
             "justMyCode": true
         },
         {
-            "name": "Frontend",
-            "type": "node",
+            "name": "Unit tests",
+            "type": "debugpy",
             "request": "launch",
-            "program": "${workspaceFolder}/frontend/index.js",
-            "cwd": "${workspaceFolder}/frontend",
-            "console": "integratedTerminal"
-        },
-        {
-            "name": "Frontend (watch)",
-            "type": "node",
-            "request": "launch",
-            "runtimeExecutable": "npm",
-            "runtimeArgs": [
-                "run",
-                "dev"
-            ],
-            "cwd": "${workspaceFolder}/frontend",
-            "console": "integratedTerminal"
+            "module": "unittest",
+            "args": ["discover", "-s", "tests"],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "justMyCode": true
         }
     ]
 }
