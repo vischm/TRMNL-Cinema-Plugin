@@ -2,7 +2,7 @@
 
 ## Overview
 
-A plugin for [TRMNL displays](https://usetrmnl.com/) that shows the highest-rated movies currently screening in local German cinemas. The plugin automatically scrapes cinema screenings from [cinema.de](https://www.cinema.de/), filters them, and ranks them by their [Letterboxd](https://letterboxd.com/) ratings. It displays the top 3 movies along with their screening times and cinemas.
+A plugin for [TRMNL displays](https://trmnl.com/) that shows the highest-rated movies currently screening in your city's cinemas. It reads the programme of any German city from [cinema.de](https://www.cinema.de/), ranks the films by their [Letterboxd](https://letterboxd.com/) rating and shows the top 3 with the showtimes that are still to come.
 
 > **Note**: This is a personal learning project by a C++ developer exploring TRMNL plugin development. While functional, the code may not follow all best practices. Feedback, contributions, and suggestions are welcome!
 
@@ -10,157 +10,81 @@ A plugin for [TRMNL displays](https://usetrmnl.com/) that shows the highest-rate
 
 ## How It Works
 
-- **Data Source**: Cinema screenings are scraped from cinema.de
-- **Ranking**: Movies are ranked by Letterboxd user ratings
-- **Display**: Shows the 3 highest-rated movies with showtimes for each cinema
-- **Deployment**: Frontend is deployed via TRMNL, backend runs on a GitHub Actions schedule
+The whole plugin runs on TRMNL's servers. There is no backend or scheduled job to host.
 
-## Project Architecture
+- **Data**: On every refresh (hourly), TRMNL runs [src/transform.py](src/transform.py) as a [serverless transform](https://help.trmnl.com/en/articles/14130649-serverless). It scrapes today's programme for the configured city from cinema.de.
+- **Ranking**: Each film is looked up on Letterboxd. Ratings are cached in TRMNL's [Saved State](https://help.trmnl.com/en/articles/16777795-saved-state), so only new films are looked up.
+- **Filtering**: Showtimes that already started are hidden; after the last screening of the day the plugin shows tomorrow's programme. With a Letterboxd username, films you logged recently are hidden.
+- **Display**: Liquid templates for the full, half and quadrant layouts, in landscape and portrait, on TRMNL OG and TRMNL X.
+- **Deployment**: Every push to `main` that touches the plugin is linted, tested and pushed to TRMNL by [GitHub Actions](.github/workflows/trmnl.yml) with [trmnlp](https://github.com/usetrmnl/trmnlp).
 
-- **Frontend**: Liquid template deployed directly through TRMNL's plugin system
-- **Backend**: Python scripts run on a scheduled GitHub Actions cronjob to fetch and post data
+## Settings
+
+| Field | Description |
+|---|---|
+| City | The city as cinema.de names it, e.g. `Leipzig`, `München` or `Frankfurt am Main`. A cinema.de programme URL works too, e.g. for `halle-saale`. |
+| Letterboxd Username | Optional. Films you logged on Letterboxd recently are hidden. |
+| Hide Films Watched Within (Days) | How far back your Letterboxd diary counts as recently watched. Default 180. |
+| Cinemas | Optional. Only show these cinemas, as comma-separated parts of their names, e.g. `Schauburg, Passage`. |
 
 ## Project Structure
 
 ```
 cinema/
-├── .github/workflows/            # GitHub Actions workflows
-│   └── nightly-run.yml          # Scheduled workflow to run scraper nightly
-├── .vscode/                      # VS Code configuration
-│   └── launch.json              # Debug and launch configurations
-├── backend/                      # Python backend for data processing
-│   ├── main.py                  # Manages data scraping, cleaning, and webhook posting
-│   ├── config.json              # Configure the project
-│   ├── ScreeningScraper.py      # Scrapes cinema screening data
-│   ├── ScreeningDataCleanup.py  # Cleans and formats screening data
-│   ├── LetterboxdAPIClient.py   # Letterboxd API integration for additional movie information
-│   ├── PostToWebhook.py         # Sends data to TRMNL webhook
-│   ├── requirements.txt         # Python dependencies
-├── frontend/                     # Liquid template and development environment
-│   ├── index.js                 # Renders Liquid template to HTML for development
-│   ├── package.json             # Node.js dependencies
-│   ├── src/
-│   │   └── main.liquid          # Liquid template for rendering
-│   ├── samples/
-│   │   └── sample-data.json     # Sample cinema screening data for debugging purpose
-└── README.md                     # This file
+├── .github/workflows/
+│   └── trmnl.yml                # Lint, test and push the plugin to TRMNL
+├── bin/
+│   └── trmnlp                   # Runs the trmnlp CLI in Docker
+├── src/                         # The plugin as TRMNL stores it
+│   ├── settings.yml             # Plugin settings and custom fields (pushed to TRMNL)
+│   ├── transform.py             # Serverless transform: scraping, ranking, caching
+│   ├── shared.liquid            # Styles and templates shared by all views
+│   ├── full.liquid              # Full screen view
+│   ├── half_horizontal.liquid   # Half views for mashups
+│   ├── half_vertical.liquid
+│   └── quadrant.liquid          # Quadrant view for mashups
+├── tests/
+│   ├── test_transform.py        # Unit tests for the transform (offline)
+│   ├── plugin_spec.rb           # Rendering tests on all TRMNL devices (trmnlp test)
+│   └── fixtures/                # Saved cinema.de page
+├── .trmnlp.yml                  # Local preview settings (not pushed)
+└── README.md
 ```
 
-## Setup
+## Development
 
-### Backend Requirements
+### Requirements
 
-- Python 3.x
-- Dependencies listed in `backend/requirements.txt`
+- [Docker](https://docs.docker.com/get-docker/) for `bin/trmnlp`
+- Python 3.12 with `requests` for the unit tests (TRMNL's serverless runtime uses Python 3.12)
 
-### Frontend Requirements
-
-- Node.js and npm
-
-### Installation
-
-#### Backend Setup
+### Preview
 
 ```bash
-cd backend
-pip install -r requirements.txt
+bin/trmnlp serve        # live preview at http://localhost:4567, runs the real transform
+bin/trmnlp build --png  # renders every view to _build/
 ```
 
-#### Frontend Setup
+The preview uses the custom field values from [.trmnlp.yml](.trmnlp.yml). Set `LETTERBOXD_USERNAME` in your environment to try the watched-films filter. On Windows, run `bin/trmnlp` from Git Bash.
+
+### Tests
 
 ```bash
-cd frontend
-npm install
+python -m unittest discover -s tests   # transform unit tests, no network needed
+bin/trmnlp lint                        # TRMNL best practices
+bin/trmnlp test --report report        # renders all views on all devices; open report/index.html
 ```
 
-### Configuration
+### Constraints of TRMNL's serverless runtime
 
-#### Environment Variables
+- 5 seconds and 128 MB per run. The transform stops looking up films after 4 seconds and continues on the next refresh.
+- Only `requests` and the Python standard library are available: HTML is parsed with `html.parser`, RSS with `xml.etree`.
+- There is no time zone database, so German time is computed in `german_now()`.
+- Saved State holds at most 8 KB. `build_state()` trims the rating cache to fit.
 
-Set the TRMNL webhook URL as an environment variable:
+### Deployment
 
-```bash
-set TRMNL_WEBHOOK_URL=your_webhook_url_here
-```
-
-#### Project Settings
-
-Configure the backend behavior in `backend/config.json`:
-
-```json
-{
-  "city": {
-    "name": "NAME_OF_YOUR_CITY_USED_FOR_CINEMA_DE",
-    "displayName": "NAME_OF_YOUR_CITY_AS_DISPLAYED_ON_THE_TRMNL_DEVICE"
-  },
-  "recentlyWatchedMovies": {
-    "excludeWatchedMovies": true,
-    "letterboxdUsername": "LETTERBOXD_USERNAME",
-    "numberOfDaysForRecentWatches": 90
-  }
-}
-```
-
-## Usage
-
-### Production Deployment
-
-#### Backend
-The backend runs automatically via a **GitHub Actions cronjob** that executes daily at 2:16 AM UTC (configured in [.github/workflows/nightly-run.yml](.github/workflows/nightly-run.yml)). It scrapes cinema screening data for the city defined in the config file, cleans it, and posts it to your TRMNL webhook URL.
-
-**Note:** In production, both `config.json` and the TRMNL webhook URL are stored as GitHub repository secrets (`CONFIG_JSON` and `TRMNL_WEBHOOK_URL`).
-
-#### Frontend
-The frontend is deployed directly through the **TRMNL web interface**:
-1. Create a new plugin in your TRMNL dashboard
-2. Copy the Liquid code between the `<!-- Start TRMNL Code -->` and `<!-- End TRMNL Code -->` comments in [src/main.liquid](frontend/src/main.liquid)
-3. Paste it into the TRMNL plugin editor
-
-### Development & Debugging
-
-#### VS Code Launch Configurations
-
-This project includes pre-configured launch configurations for easy debugging and development. Access them via the **Run and Debug** view (Ctrl+Shift+D):
-
-- **Backend** — Launches the backend Python script (`backend/main.py`) in the debugger
-- **Frontend** — Builds the frontend once by running `index.js`
-- **Frontend (watch)** — Starts the development server with continuous hot-reloading via `npm run dev`
-
-#### Running the Backend Manually
-
-```bash
-python backend/main.py
-```
-
-This will:
-1. Scrape cinema screening data
-2. Clean and process the data
-3. Post the formatted data to your TRMNL webhook URL
-
-**Use this only for debugging the scraper or data cleaning logic.**
-
-#### Building the Frontend HTML
-
-```bash
-cd frontend
-npm run dev
-```
-
-This starts a development server with hot-reloading that watches for changes to:
-- `src/main.liquid` (Liquid template)
-- `data/data.json` (Cinema data)
-
-**Use this only for debugging template changes before deploying to TRMNL.**
-
-## Dependencies
-
-### Backend
-- **requests**: HTTP library for web scraping
-- **bs4**: Beautiful Soup for HTML parsing
-
-### Frontend
-- **liquidjs**: JavaScript implementation of Liquid templating (v10.21.0)
-- **nodemon**: Development tool for auto-reloading (dev dependency)
+Pushes to `main` deploy automatically. The workflow needs the repository secret `TRMNL_API_KEY`: a TRMNL account API key with the `read` and `content` capabilities, created at [trmnl.com/account](https://trmnl.com/account). The plugin it updates is set by `id` in [src/settings.yml](src/settings.yml).
 
 ## Third-Party Assets
 
@@ -168,6 +92,8 @@ This project uses **Bootstrap Icons**
 © The Bootstrap Authors  
 Licensed under the MIT License  
 https://icons.getbootstrap.com/
+
+Programme data comes from [cinema.de](https://www.cinema.de/), ratings and posters from [Letterboxd](https://letterboxd.com/).
 
 ## License
 
