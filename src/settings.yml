@@ -1,0 +1,49 @@
+#
+# Changes to this file will be overwritten by `trmnlp pull`.
+#
+# Docs: https://help.trmnl.com/en/articles/10542599-importing-and-exporting-private-plugins#h_581fb988f0
+#
+---
+id: 511825
+name: Cinema
+description: ''
+strategy: polling
+polling_verb: get
+polling_url: ''
+polling_headers: ''
+static_data: ''
+no_screen_padding: 'no'
+dark_mode: 'no'
+framework_version: '3.4.0'
+refresh_interval: 60
+serverless_language: python
+custom_fields:
+- keyname: author_bio
+  name: About This Plugin
+  field_type: author_bio
+  description: Shows the highest-rated movies currently screening in your city's cinemas, ranked by their Letterboxd rating.
+  github_url: https://github.com/vischm/TRMNL-Cinema-Plugin
+- keyname: city
+  field_type: string
+  name: City
+  description: Your city as cinema.de names it, e.g. Leipzig, München or Frankfurt am Main. If it isn't found, paste the cinema.de programme URL of your city instead.
+  placeholder: Berlin
+  default: Berlin
+- keyname: letterboxd_username
+  field_type: string
+  name: Letterboxd Username
+  description: Optional. Films you logged on Letterboxd recently are hidden.
+  optional: true
+- keyname: recent_days
+  field_type: number
+  name: Hide Films Watched Within (Days)
+  description: How far back your Letterboxd diary counts as recently watched.
+  default: 180
+  min: 1
+  max: 3650
+  optional: true
+- keyname: cinemas
+  field_type: string
+  name: Cinemas
+  description: Optional. Only show these cinemas, as comma-separated parts of their names, e.g. Schauburg, Passage.
+  optional: true
