@@ -94,14 +94,14 @@ def extract_rating(search_result: str) -> float:
 def extract_poster_url(search_result: str) -> str:
     try:
         return search_result['poster']['sizes'][0]['url']
-    except KeyError:
+    except (KeyError, IndexError, TypeError):
         return None
-    
+
 def extract_tmdb_id(search_result: str) -> int:
     try:
         links = search_result['links']
         for link in links:
             if link['type'] == 'tmdb':
                 return int(link['id'])
-    except KeyError:
+    except (KeyError, TypeError, ValueError):
         return None
