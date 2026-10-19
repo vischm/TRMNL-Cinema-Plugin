@@ -26,7 +26,7 @@ LETTERBOXD_SEARCH_URL = "https://api.letterboxd.com/api/v0/search"
 LETTERBOXD_RSS_URL = "https://letterboxd.com/{username}/rss/"
 HEADERS = {"User-Agent": "Mozilla/5.0"}
 
-TIME_BUDGET_S = 4.0       # TRMNL stops a run after 5 s
+TIME_BUDGET_S = 3.0       # TRMNL stops a run after 5 s, Python's start-up included
 REQUEST_TIMEOUT = (2, 3)  # seconds to connect, seconds between received bytes
 LOOKUP_WORKERS = 10
 MAX_MOVIES = 3
@@ -184,8 +184,13 @@ def to_int(value, default):
 # cinema.de
 # ---------------------------------------------------------------------------
 
+# One connection pool for all lookups, so a run needs a TLS handshake per worker instead of per film
+SESSION = requests.Session()
+SESSION.mount("https://", requests.adapters.HTTPAdapter(pool_maxsize=LOOKUP_WORKERS))
+
+
 def http_get(url, params=None):
-    return requests.get(url, params=params, headers=HEADERS, timeout=REQUEST_TIMEOUT)
+    return SESSION.get(url, params=params, headers=HEADERS, timeout=REQUEST_TIMEOUT)
 
 
 def fetch_programme(slug, day=None):
