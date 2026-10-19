@@ -2,7 +2,7 @@
 
 ## Overview
 
-A plugin for [TRMNL displays](https://trmnl.com/) that shows the highest-rated movies currently screening in your city's cinemas. It reads the programme of any German city from [cinema.de](https://www.cinema.de/), ranks the films by their [Letterboxd](https://letterboxd.com/) rating and shows the top 3 with the showtimes that are still to come.
+A plugin for [TRMNL displays](https://trmnl.com/) that shows the highest-rated movies currently screening in your city's cinemas. It reads the programme of any German city from [cinema.de](https://www.cinema.de/), ranks the films by their [Letterboxd](https://letterboxd.com/) rating and shows the best ones (three on TRMNL OG, four on TRMNL X) with the showtimes that are still to come.
 
 > **Note**: This is a personal learning project by a C++ developer exploring TRMNL plugin development. While functional, the code may not follow all best practices. Feedback, contributions, and suggestions are welcome!
 
@@ -10,7 +10,7 @@ A plugin for [TRMNL displays](https://trmnl.com/) that shows the highest-rated m
 
 ## Features
 
-- The 3 best-rated films of the day, each with its cinemas and the showtimes still to come. After the last screening of the day, tomorrow's programme is shown.
+- The best-rated films of the day, three on TRMNL OG and four on TRMNL X, each with its cinemas and the showtimes still to come. After the last screening of the day, tomorrow's programme is shown.
 - Works for every town and city on cinema.de.
 - Version tags such as `OmU`, `OV`, `3D` or `70mm` next to each showtime.
 - Optional: hide films you logged on Letterboxd recently, list your preferred cinemas first, exclude cinemas.

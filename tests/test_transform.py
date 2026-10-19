@@ -272,7 +272,8 @@ class RunTest(unittest.TestCase):
         result = run_plugin(web, {"letterboxd_username": "someone"})
         self.assertEqual(result["error"], "")
         self.assertEqual((result["city"], result["day"], result["date"]), ("Leipzig", "today", "2026-10-19"))
-        self.assertEqual([m["title"] for m in result["movies"]], ["Sinn und Sinnlichkeit", "Digger", "Street Fighter"])
+        self.assertEqual([m["title"] for m in result["movies"]],
+                         ["Sinn und Sinnlichkeit", "Digger", "Street Fighter", "Shaun das Schaf - Spuk im Kürbisfeld"])
         first = result["movies"][0]
         self.assertEqual(first["rating"], 4.0)
         self.assertEqual(first["poster_url"], "https://posters.test/%d.jpg" % tmdb_id("Sinn und Sinnlichkeit"))
@@ -313,7 +314,7 @@ class RunTest(unittest.TestCase):
     def test_without_letterboxd_films_are_ranked_by_screenings(self):
         result = run_plugin(FakeWeb(letterboxd_up=False))
         self.assertEqual(result["error"], "")
-        self.assertEqual(len(result["movies"]), 3)
+        self.assertEqual(len(result["movies"]), transform.MAX_MOVIES)
         self.assertIsNone(result["movies"][0]["rating"])
         self.assertNotIn("Whalefall", [m["title"] for m in result["movies"]])  # only 3 screenings
 

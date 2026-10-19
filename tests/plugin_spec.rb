@@ -44,10 +44,12 @@ RSpec.describe 'Cinema' do
   # Every view on TRMNL's devices, a failing API and every select option, checked for page errors and leaked values.
   it_behaves_like 'a publishable recipe'
 
-  it 'shows the three best films of the day' do
+  it 'shows the best films of the day: three on TRMNL OG, four on TRMNL X' do
     screen = trmnl.render(view: 'full', device: 'og_plus', mocks:, custom_fields:)
-    expect(screen.result.data['movies'].size).to eq(3)
-    expect(screen).to have_text('Now in Theaters').and have_text('Leipzig').and have_text('3.9')
+    expect(screen.result.data['movies'].size).to eq(4)
+    expect(screen).to have_css('.movie', count: 3)
+    expect(screen).to have_text('Leipzig').and have_text('3.9')
+    expect(trmnl.render(view: 'full', device: 'v2', mocks:, custom_fields:)).to have_css('.movie', count: 4)
   end
 
   it 'stays within the limits when Letterboxd is slow' do
@@ -55,7 +57,7 @@ RSpec.describe 'Cinema' do
     run = trmnl.transform(mocks: slow, custom_fields:)
     expect(run).to stay_within_serverless_limits
     expect(run.error).to be_nil
-    expect(run.data['movies'].size).to eq(3)
+    expect(run.data['movies'].size).to eq(4)
   end
 
   it "fits the date next to tomorrow's title in portrait" do

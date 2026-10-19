@@ -8,14 +8,15 @@ id: 511825
 name: Cinema
 description: Top-rated films in your cinemas
 recipe_overview: |-
-  Cinema shows the three best films currently playing in the cinemas of your city, together with the showtimes
-  that are still to come today. The programme comes from cinema.de and covers hundreds of German towns and cities,
-  from Berlin, Hamburg and München to small towns with a single cinema. Every film is looked up on Letterboxd and
-  ranked by its average rating, so the screen always suggests what is worth watching tonight. Showtimes that have
-  already started disappear, and after the last screening of the day the plugin switches to tomorrow's programme.
-  Version tags such as OmU, OV, 3D or 70mm are shown next to each showtime. Enter your Letterboxd username to hide
-  films you have logged in your diary recently, and limit the list to your favourite cinemas if you live in a big
-  city. The plugin refreshes hourly and comes with full, half and quadrant layouts in landscape and portrait.
+  Cinema shows the best-rated films currently playing in the cinemas of your city, three on TRMNL OG and four on
+  TRMNL X, together with the showtimes that are still to come today. The programme comes from cinema.de and covers
+  hundreds of German towns and cities, from Berlin, Hamburg and München to small towns with a single cinema. Every
+  film is looked up on Letterboxd and ranked by its average rating, so the screen always suggests what is worth
+  watching tonight. Showtimes that have already started disappear, and after the last screening of the day the
+  plugin switches to tomorrow's programme. Version tags such as OmU, OV, 3D or 70mm are shown next to each
+  showtime. Enter your Letterboxd username to hide films you have logged in your diary recently, list your
+  favourite cinemas first and hide the ones you never go to. The plugin refreshes hourly and comes with full, half
+  and quadrant layouts in landscape and portrait.
 strategy: polling
 polling_verb: get
 polling_url: ''

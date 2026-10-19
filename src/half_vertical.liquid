@@ -1,8 +1,9 @@
 <div class="layout layout--col layout--stretch">
   {% if movies.size > 0 %}
     <div class="cinema-grid grid grid--cols-1">
-      {% for movie in movies limit: 3 %}
-        {% render "movie_row", movie: movie, lines: 2 %}
+      {% for movie in movies limit: 4 %}
+        {% if forloop.index > 3 %}{% assign extra = true %}{% else %}{% assign extra = false %}{% endif %}
+        {% render "movie_row", movie: movie, extra: extra %}
       {% endfor %}
     </div>
   {% else %}

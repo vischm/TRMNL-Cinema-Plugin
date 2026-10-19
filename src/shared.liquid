@@ -93,6 +93,42 @@
     height: calc(var(--full-h) * 0.22);
   }
 
+  /* TRMNL X (screen--lg) lays out at 1040 x 780 CSS px: it gets a fourth film and a lower title box,
+     so each column's cinema list gets the rest of the height. Other screens hide the fourth film. */
+  .screen:not(.screen--lg) .movie--lg-only {
+    display: none;
+  }
+
+  .screen--lg .view--full .cinema-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  /* Four compact cards side by side leave too little room next to the posters: 2 x 2 instead */
+  .screen--lg .view--half_horizontal .cinema-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .screen--lg.screen--portrait .view--full .cinema-grid,
+  .screen--lg.screen--portrait .view--half_horizontal .cinema-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .screen--lg:not(.screen--portrait) .view--full .movie__title {
+    height: calc(80px * var(--ui-scale, 1));
+  }
+
+  .screen--lg.screen--portrait .view--full .movie__image {
+    height: calc(var(--full-h) * 0.17);
+  }
+
+  .screen--lg:not(.screen--portrait) .view--half_horizontal .movie-row .movie__image {
+    height: calc(140px * var(--ui-scale, 1));
+  }
+
+  .screen--lg .view--half_vertical .movie-row .movie__image {
+    height: calc(140px * var(--ui-scale, 1));
+  }
+
   .title_bar__date {
     position: absolute;
     left: 50%;
@@ -173,7 +209,7 @@
 {% endtemplate %}
 
 {% template movie_card %}
-  <div class="movie">
+  <div class="movie{% if extra %} movie--lg-only{% endif %}">
     <div class="movie__title flex flex--row flex--center bg--gray-65">
       <span class="content content--large text--center text-stroke text-stroke--large" data-clamp="2">{{ movie.title }}</span>
     </div>
@@ -200,12 +236,12 @@
 {% endtemplate %}
 
 {% template movie_row %}
-  <div class="movie-row flex flex--row flex--left flex--center-y">
+  <div class="movie-row flex flex--row flex--left flex--center-y{% if extra %} movie--lg-only{% endif %}">
     {% render "poster", movie: movie %}
     <div class="movie-row__text flex flex--col flex--left gap--xsmall">
       <span class="title title--small" data-clamp="2">{{ movie.title }}</span>
-      {% for cinema in movie.cinemas limit: lines %}
-        <span class="description" data-clamp="1">{{ cinema.screenings.first.time }} {{ cinema.cinema }}</span>
+      {% for cinema in movie.cinemas limit: 3 %}
+        <span class="description{% if forloop.index > 2 %} movie--lg-only{% endif %}" data-clamp="1">{{ cinema.screenings.first.time }} {{ cinema.cinema }}</span>
       {% endfor %}
     </div>
   </div>

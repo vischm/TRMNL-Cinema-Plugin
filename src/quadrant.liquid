@@ -1,8 +1,8 @@
 <div class="layout layout--col layout--stretch">
   {% if movies.size > 0 %}
     <div class="flex flex--col gap--small">
-      {% for movie in movies limit: 3 %}
-        <div class="item">
+      {% for movie in movies limit: 4 %}
+        <div class="item{% if forloop.index > 3 %} movie--lg-only{% endif %}">
           <div class="meta"></div>
           <div class="content">
             <span class="title title--small" data-clamp="1">{% if movie.rating %}{{ movie.rating }} · {% endif %}{{ movie.title }}</span>
