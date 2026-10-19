@@ -12,4 +12,5 @@ custom_fields:
   city: Leipzig
   letterboxd_username: "{{ env.LETTERBOXD_USERNAME }}"
   recent_days: 180
-  cinemas: ""
+  preferred_cinemas: ""
+  excluded_cinemas: ""

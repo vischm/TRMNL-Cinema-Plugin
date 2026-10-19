@@ -25,7 +25,8 @@ The whole plugin runs on TRMNL's servers. There is no backend or scheduled job t
 | City | The city as cinema.de names it, e.g. `Leipzig`, `München` or `Frankfurt am Main`. A cinema.de programme URL works too, e.g. for `halle-saale`. |
 | Letterboxd Username | Optional. Films you logged on Letterboxd recently are hidden. |
 | Hide Films Watched Within (Days) | How far back your Letterboxd diary counts as recently watched. Default 180. |
-| Cinemas | Optional. Only show these cinemas, as comma-separated parts of their names, e.g. `Schauburg, Passage`. |
+| Preferred Cinemas | Optional. Listed first under each film, in this order. Part of the name is enough, e.g. `Schauburg`. |
+| Excluded Cinemas | Optional. Screenings at these cinemas are hidden; a film shown only there drops out. Part of the name is enough. |
 
 ## Project Structure
 

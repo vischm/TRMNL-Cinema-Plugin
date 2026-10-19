@@ -167,9 +167,26 @@ class FilterTest(unittest.TestCase):
         self.assertEqual(transform.only_upcoming(self.films, "16:00"),
                          {"A": {"Schauburg": [{"time": "20:00", "tags": []}]}})
 
-    def test_only_cinemas_matches_parts_case_insensitively(self):
-        self.assertEqual(list(transform.only_cinemas(self.films, ["passage"])), ["B"])
-        self.assertEqual(transform.only_cinemas(self.films, []), self.films)
+    def test_without_cinemas_matches_parts_and_drops_films_shown_only_there(self):
+        self.assertEqual(list(transform.without_cinemas(self.films, ["passage"])), ["A"])
+        self.assertEqual(transform.without_cinemas(self.films, []), self.films)
+
+    def test_cinema_names(self):
+        self.assertEqual(transform.cinema_names("Schauburg, Passage Kinos,"), ["schauburg", "passage kinos"])
+        self.assertEqual(transform.cinema_names(["Schauburg", " "]), ["schauburg"])
+        self.assertEqual(transform.cinema_names(None), [])
+
+    def test_preferred_cinemas_come_first_in_their_order(self):
+        cinemas = {
+            "Cineplex": [{"time": "14:00", "tags": []}],
+            "Passage Kinos": [{"time": "20:00", "tags": []}],
+            "Schauburg": [{"time": "21:00", "tags": []}],
+            "Regina-Palast": [{"time": "13:00", "tags": []}],
+        }
+        order = [c["cinema"] for c in transform.movie_view("A", cinemas, None, ["schauburg", "passage"])["cinemas"]]
+        self.assertEqual(order, ["Schauburg", "Passage Kinos", "Regina-Palast", "Cineplex"])
+        order = [c["cinema"] for c in transform.movie_view("A", cinemas, None)["cinemas"]]
+        self.assertEqual(order, ["Regina-Palast", "Cineplex", "Passage Kinos", "Schauburg"])
 
 
 class LetterboxdTest(unittest.TestCase):
@@ -251,9 +268,20 @@ class RunTest(unittest.TestCase):
         self.assertEqual((result["city"], result["day"], result["date"]), ("Leipzig", "today", "2026-10-19"))
         self.assertEqual([m["title"] for m in result["movies"]], ["Sinn und Sinnlichkeit", "Digger", "Street Fighter"])
         first = result["movies"][0]
-        self.assertEqual((first["rating"], first["next_time"]), (4.0, "17:15"))
+        self.assertEqual(first["rating"], 4.0)
         self.assertEqual(first["poster_url"], "https://posters.test/%d.jpg" % tmdb_id("Sinn und Sinnlichkeit"))
         self.assertEqual([c["cinema"] for c in first["cinemas"]], ["Regina-Palast", "Passage Kinos"])
+        self.assertEqual(first["cinemas"][0]["screenings"][0]["time"], "17:15")
+
+    def test_preferred_and_excluded_cinemas(self):
+        result = run_plugin(FakeWeb(), {"preferred_cinemas": "Passage", "excluded_cinemas": "Regina-Palast"})
+        sense = next(m for m in result["movies"] if m["title"] == "Sinn und Sinnlichkeit")
+        self.assertEqual([c["cinema"] for c in sense["cinemas"]], ["Passage Kinos"])
+        result = run_plugin(FakeWeb(), {"preferred_cinemas": "Passage,Regina"})
+        sense = next(m for m in result["movies"] if m["title"] == "Sinn und Sinnlichkeit")
+        self.assertEqual([c["cinema"] for c in sense["cinemas"]], ["Passage Kinos", "Regina-Palast"])
+        result = run_plugin(FakeWeb(), {"excluded_cinemas": "Regina, Passage"})
+        self.assertNotIn("Sinn und Sinnlichkeit", [m["title"] for m in result["movies"]])
 
     def test_second_run_uses_the_cache(self):
         first = run_plugin(FakeWeb())

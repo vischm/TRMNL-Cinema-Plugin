@@ -89,18 +89,19 @@ def build_screen(fields, state, now, deadline):
         raise CinemaError("Set your city in the plugin settings.")
     username = letterboxd_username(fields.get("letterboxd_username", ""))
     recent_days = to_int(fields.get("recent_days"), DEFAULT_RECENT_DAYS)
-    cinema_filter = [part.strip().lower() for part in str(fields.get("cinemas") or "").split(",") if part.strip()]
+    preferred = cinema_names(fields.get("preferred_cinemas"))
+    excluded = cinema_names(fields.get("excluded_cinemas"))
 
     watched_job = Background(fetch_recent_watches, username, now.date(), recent_days) if username else None
 
     day = "today"
     city, films = fetch_programme_by(deadline, slug)
-    films = only_upcoming(only_cinemas(films, cinema_filter), now.strftime("%H:%M"))
+    films = only_upcoming(without_cinemas(films, excluded), now.strftime("%H:%M"))
     if not films:
         # Today's last screening has started: show tomorrow's programme instead
         day = "tomorrow"
         city, films = fetch_programme_by(deadline, slug, now.date() + timedelta(days=1))
-        films = only_cinemas(films, cinema_filter)
+        films = without_cinemas(films, excluded)
 
     cache = load_cache(state)
     today = now.date().toordinal()
@@ -123,7 +124,7 @@ def build_screen(fields, state, now, deadline):
         "day": day,
         "date": (now.date() + timedelta(days=1 if day == "tomorrow" else 0)).isoformat(),
         "updated_at": now.strftime("%H:%M"),
-        "movies": [movie_view(title, films[title], cache.get(title)) for title in top],
+        "movies": [movie_view(title, films[title], cache.get(title), preferred) for title in top],
         "error": "",
         "trmnl_state": build_state(cache, set(films), set(top)),
     }
@@ -169,6 +170,12 @@ def letterboxd_username(value):
     value = str(value or "").strip()
     url = re.search(r"letterboxd\.com/([A-Za-z0-9_]+)", value)
     return url.group(1) if url else value.lstrip("@")
+
+
+def cinema_names(value):
+    """Lower-cased parts of cinema names from a multi_string field, which arrives as "Schauburg,Passage"."""
+    parts = value if isinstance(value, list) else str(value or "").replace("\n", ",").split(",")
+    return [str(part).strip().lower() for part in parts if str(part).strip()]
 
 
 def to_int(value, default):
@@ -385,15 +392,21 @@ def parse_tag_group(group):
     return tags
 
 
-def only_cinemas(films, cinema_filter):
-    if not cinema_filter:
+def without_cinemas(films, excluded):
+    """Drop the cinemas whose names contain an excluded part, and films only they show."""
+    if not excluded:
         return films
     kept = {}
     for title, cinemas in films.items():
-        matching = {c: s for c, s in cinemas.items() if any(part in c.lower() for part in cinema_filter)}
-        if matching:
-            kept[title] = matching
+        remaining = {c: s for c, s in cinemas.items() if not any(part in c.lower() for part in excluded)}
+        if remaining:
+            kept[title] = remaining
     return kept
+
+
+def preference(cinema, preferred):
+    """Position of the first preferred name part the cinema contains; other cinemas come after all of them."""
+    return next((i for i, part in enumerate(preferred) if part in cinema.lower()), len(preferred))
 
 
 def only_upcoming(films, now_hhmm):
@@ -509,16 +522,15 @@ def rank(films, cache, watched):
                   reverse=True)
 
 
-def movie_view(title, cinemas, cached):
+def movie_view(title, cinemas, cached, preferred=()):
+    """A film for the views: preferred cinemas first, in their order, then the others by next showtime."""
     rating, _, poster_url, _ = cached or [None, None, None, None]
-    times = sorted(s["time"] for screenings in cinemas.values() for s in screenings)
+    ordered = sorted(cinemas.items(), key=lambda kv: (preference(kv[0], preferred), kv[1][0]["time"]))
     return {
         "title": title,
         "rating": round(rating, 1) if rating is not None else None,
         "poster_url": poster_url,
-        "next_time": times[0] if times else "",
-        "cinemas": [{"cinema": cinema, "screenings": screenings}
-                    for cinema, screenings in sorted(cinemas.items(), key=lambda kv: kv[1][0]["time"])],
+        "cinemas": [{"cinema": cinema, "screenings": screenings} for cinema, screenings in ordered],
     }
 
 
