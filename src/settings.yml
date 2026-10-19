@@ -31,12 +31,13 @@ custom_fields:
 - keyname: author_bio
   name: About This Plugin
   field_type: author_bio
-  description: Shows the highest-rated movies currently screening in your city's cinemas in Germany, ranked by their Letterboxd rating.
+  category: entertainment,discovery
+  description: Shows the highest-rated movies currently screening in your city's cinemas in Germany, ranked by their Letterboxd rating. Programme data comes from <a href="https://www.cinema.de/kino/kinoprogramm">cinema.de</a>, ratings and posters from <a href="https://letterboxd.com/">Letterboxd</a>.
   github_url: https://github.com/vischm/TRMNL-Cinema-Plugin
 - keyname: city
   field_type: string
   name: City
-  description: Your city in Germany as cinema.de names it, e.g. Leipzig, München or Frankfurt am Main. If it isn't found, paste the cinema.de programme URL of your city instead.
+  description: Your city in Germany as <a href="https://www.cinema.de/kino/kinoprogramm">cinema.de</a> names it, e.g. Leipzig, München or Frankfurt am Main. If it isn't found, paste the cinema.de programme URL of your city instead.
   placeholder: Berlin
   default: Berlin
 - keyname: preferred_cinemas
@@ -56,7 +57,7 @@ custom_fields:
 - keyname: hide_watched
   field_type: boolean
   name: Hide Films I've Watched
-  description: Hides films you logged in your Letterboxd diary.
+  description: Hides films you logged in your <a href="https://letterboxd.com/">Letterboxd</a> diary.
   default: false
   optional: true
   group: Letterboxd
