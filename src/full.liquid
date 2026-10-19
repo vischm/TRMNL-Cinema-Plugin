@@ -1,6 +1,6 @@
 <div class="layout layout--col layout--stretch">
   {% if movies.size > 0 %}
-    <div class="cinema-grid grid grid--cols-3 portrait:grid--cols-1">
+    <div class="cinema-grid grid grid--cols-3 gap--large portrait:grid--cols-1">
       {% for movie in movies limit: 3 %}
         {% render "movie_card", movie: movie %}
       {% endfor %}

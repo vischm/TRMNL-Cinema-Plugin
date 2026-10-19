@@ -7,6 +7,7 @@
 
   .movie {
     display: grid;
+    min-width: 0;  /* a long cinema name must not widen its column into the gap */
     min-height: 0;
     grid-template-rows: auto auto minmax(0, 1fr);
     grid-template-areas: "title" "poster" "cinemas";
@@ -37,18 +38,37 @@
 
   .movie__rating {
     position: absolute;
-    right: 0;
-    bottom: 0;
-    transform: translate(40%, 20%);
+    right: calc(-12px * var(--ui-scale, 1));
+    bottom: calc(-4px * var(--ui-scale, 1));
+    padding: calc(8px * var(--ui-scale, 1)) calc(10px * var(--ui-scale, 1));
+    border-radius: calc(10px * var(--ui-scale, 1));
   }
 
   .movie__cinemas {
     grid-area: cinemas;
+    min-width: 0;
     min-height: 0;
+  }
+
+  /* CSS ellipsis instead of data-clamp: the framework measures the whole item, grey bar included,
+     so a clamped name still ran past the edge */
+  .movie__cinemas .content {
+    min-width: 0;
+  }
+
+  .movie__cinemas .movie__cinema-name {
+    display: block;
+    align-self: stretch;  /* .item .content doesn't stretch its children, so the name never overflowed itself */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .movie__time {
     white-space: nowrap;
+    padding: calc(5px * var(--ui-scale, 1));
+    height: calc(27px * var(--ui-scale, 1));
+    border-radius: calc(10px * var(--ui-scale, 1));
   }
 
   /* Portrait: poster on the left, title and cinemas next to it */
@@ -85,7 +105,8 @@
   .movie-row .movie__rating {
     right: calc(4px * var(--ui-scale, 1));
     bottom: calc(4px * var(--ui-scale, 1));
-    transform: none;
+    padding: calc(4px * var(--ui-scale, 1)) calc(6px * var(--ui-scale, 1));
+    border-radius: calc(8px * var(--ui-scale, 1));
   }
 
   /* Takes the rest of the row. Its lines span its full width, because the framework's data-clamp
@@ -128,7 +149,7 @@
       </svg>
     {% endif %}
     {% if movie.rating %}
-      <span class="label label--inverted movie__rating">{{ movie.rating }}</span>
+      <span class="label label--outline bg--white movie__rating">{{ movie.rating }}</span>
     {% endif %}
   </div>
 {% endtemplate %}
@@ -136,7 +157,7 @@
 {% template movie_card %}
   <div class="movie">
     <div class="movie__title flex flex--row flex--center bg--gray-65">
-      <span class="title text--center text-stroke text-stroke--large" data-clamp="2">{{ movie.title }}</span>
+      <span class="content content--large text--center text-stroke text-stroke--large" data-clamp="2">{{ movie.title }}</span>
     </div>
     {% render "poster", movie: movie %}
     <div class="movie__cinemas flex flex--col gap--small" data-overflow="true" data-overflow-counter="true">
@@ -144,10 +165,10 @@
         <div class="item">
           <div class="meta"></div>
           <div class="content">
-            <span class="title title--small" data-clamp="1">{{ cinema.cinema }}</span>
+            <span class="title title--small movie__cinema-name">{{ cinema.cinema }}</span>
             <div class="flex flex--wrap gap--xsmall">
               {% for screening in cinema.screenings %}
-                <span class="label label--outline movie__time">{{ screening.time }}{% for tag in screening.tags %} {{ tag }}{% endfor %}</span>
+                <span class="label label--outline label--small movie__time">{{ screening.time }}{% for tag in screening.tags %} {{ tag }}{% endfor %}</span>
               {% endfor %}
             </div>
           </div>
